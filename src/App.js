@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Board from './Board';
 import Square from './Square';
 import './App.css';
@@ -24,7 +24,7 @@ function App() {
 
   let solution = [ [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6] ];  
 
-
+//Change this to a useEffect?
   const handleClick = (e)=>{
     const curr = e.target.id;
     if(board[curr] === null){
@@ -32,12 +32,15 @@ function App() {
         ...board,
         [curr]: player
       })
-      //Need a function that will check which player and update that players moves array
-      checkWinner();
-      console.log(curr, board)
-      setPlayer( (current) => current === "X" ? "O" : "X")
     }
   }
+  
+  useEffect( ()=>{
+    checkWinner();
+    console.log(`player: `, player, board)
+    //Need a function that will update current players moves array
+    setPlayer( () => player === "X" ? "O" : "X")
+  }, [board]);
 
   const checkWinner = () =>{
     console.log(`We have a winner `, winner)
@@ -55,7 +58,7 @@ function App() {
   return (
     <div className='App'>
       <h1>Tic Tac Toe Game!</h1>
-      <h5>Current Player: {player ? "X" : "O"}</h5>
+      <h5>Current Player: {player}</h5>
       <Board>
         {squares}
       </Board>
