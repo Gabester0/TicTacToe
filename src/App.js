@@ -19,7 +19,19 @@ function App() {
   })
   const [winner, setWinner] = useState(false);
 
-  const squares = [...Array(9)].map( (e, i)=>  <Square id={i} key={i} number={i + 1} value={board[i]} ></Square> )
+
+  const handleClick = (e)=>{
+    alert(e.target.id)
+  }
+
+  const squares = [...Array(9)].map( (e, i)=>  (
+    <Square 
+      id={i} 
+      key={i} 
+      number={i + 1} 
+      value={board[i]} 
+      click={handleClick}
+    ></Square> ))
 
   return (
     <div className='App'>
