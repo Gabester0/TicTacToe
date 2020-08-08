@@ -5,7 +5,8 @@ import './App.css';
 
 function App() {
 
-  const [player, setPlayer] = useState(false);
+  const [player, setPlayer] = useState("X");
+  //Switch to array, use index to track board position
   const [board, setBoard] = useState({ 
     "0" : null,
     "1" : null,
@@ -16,16 +17,26 @@ function App() {
     "6" : null,
     "7" : null,
     "8" : null,
-  })
+  });
+  const [xmoves, setxMoves] = useState([]);
+  const [omoves, setoMoves] = useState([]);
   const [winner, setWinner] = useState(false);
 
   let solution = [ [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6] ];  
 
 
   const handleClick = (e)=>{
-    checkWinner();
-    console.log(e.target.id)
-    setPlayer( (current) => !current)
+    const curr = e.target.id;
+    if(board[curr] === null){
+      setBoard({
+        ...board,
+        [curr]: player
+      })
+      //Need a function that will check which player and update that players moves array
+      checkWinner();
+      console.log(curr, board)
+      setPlayer( (current) => current === "X" ? "O" : "X")
+    }
   }
 
   const checkWinner = () =>{
