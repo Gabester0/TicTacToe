@@ -19,9 +19,16 @@ function App() {
   })
   const [winner, setWinner] = useState(false);
 
+  let solution = [ [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6] ];  
+
 
   const handleClick = (e)=>{
-    alert(e.target.id)
+    checkWinner();
+    console.log(e.target.id)
+  }
+
+  const checkWinner = () =>{
+    console.log(`We have a winner `, winner)
   }
 
   const squares = [...Array(9)].map( (e, i)=>  (
