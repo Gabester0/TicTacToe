@@ -5,7 +5,7 @@ import './App.css';
 
 function App() {
 
-  const [player, setPlayer] = useState("X");
+  const [player, setPlayer] = useState(false);
   const [board, setBoard] = useState({ 
     "0" : null,
     "1" : null,
@@ -25,6 +25,7 @@ function App() {
   const handleClick = (e)=>{
     checkWinner();
     console.log(e.target.id)
+    setPlayer( (current) => !current)
   }
 
   const checkWinner = () =>{
@@ -43,7 +44,7 @@ function App() {
   return (
     <div className='App'>
       <h1>Tic Tac Toe Game!</h1>
-      <h5>Current Player: {player}</h5>
+      <h5>Current Player: {player ? "X" : "O"}</h5>
       <Board>
         {squares}
       </Board>
