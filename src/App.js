@@ -27,18 +27,20 @@ function App() {
 //Change this to a useEffect?
   const handleClick = (e)=>{
     const curr = e.target.id;
+
     if(board[curr] === null){
       setBoard({
         ...board,
         [curr]: player
       })
     }
+
+    //Need a function here that will update current players moves array
   }
   
   useEffect( ()=>{
     checkWinner();
     console.log(`player: `, player, board)
-    //Need a function that will update current players moves array
     setPlayer( () => player === "X" ? "O" : "X")
   }, [board]);
 
