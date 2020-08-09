@@ -6,7 +6,6 @@ import './App.css';
 function App() {
 
   const [player, setPlayer] = useState("X");
-  //Switch to array, use index to track board position
   const [board, setBoard] = useState({ 
     "0" : null,
     "1" : null,
@@ -22,9 +21,8 @@ function App() {
   const [omoves, setoMoves] = useState([]);
   const [winner, setWinner] = useState(false);
 
-  let solution = [ [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6] ];  
+  const solutions = [ [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6] ];
 
-//Change this to a useEffect?
   const handleClick = (e)=>{
     const curr = e.target.id;
 
@@ -33,19 +31,38 @@ function App() {
         ...board,
         [curr]: player
       })
+      player === "X" ? setxMoves ([...xmoves, curr]) : setoMoves([...omoves, curr]);     
     }
-
-    //Need a function here that will update current players moves array
   }
-  
+
   useEffect( ()=>{
-    checkWinner();
-    console.log(`player: `, player, board)
+    if(xmoves.length + omoves.length === 9){
+      handleDraw();
+      return
+    }
+    player === "X" ? checkWinner(xmoves) : checkWinner(omoves);
+    console.log(`player: `, player, `  xmoves + omoves `, xmoves, omoves, board)
     setPlayer( () => player === "X" ? "O" : "X")
   }, [board]);
 
-  const checkWinner = () =>{
-    console.log(`We have a winner `, winner)
+  const checkWinner = (playerMoves) =>{
+    if(playerMoves.length < 3) {
+      console.log(`Not enough tokens for a win`)
+      return false;
+    }
+    /*
+    Iterate through solutions
+    Check if playerMoves (xmoves or omoves) contains solutions[i]
+    *! .includes won't work for this.  Only accepts a single integer value */
+   //? Check if the gist you saved to github from recent code Challenge could be used for checkWinner?
+/*  if included setWinner(true) & return true
+    else return false
+    */
+    console.log(`Checking for a winner `, winner)
+  }
+
+  const handleDraw = ()=>{
+    console.log(`It's a draw.  No moves left`)
   }
 
   const squares = [...Array(9)].map( (e, i)=>  (
