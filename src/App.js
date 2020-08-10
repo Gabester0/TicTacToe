@@ -24,9 +24,9 @@ function App() {
   const solutions = [ [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6] ];
 
   const handleClick = (e)=>{
-    const curr = e.target.id;
+    const curr = parseInt(e.target.id);
 
-    if(board[curr] === null){
+    if(board[curr] === null && !winner){
       setBoard({
         ...board,
         [curr]: player
@@ -40,9 +40,20 @@ function App() {
       handleDraw();
       return
     }
-    player === "X" ? checkWinner(xmoves) : checkWinner(omoves);
+    let win;
+    if(player === "X"){
+      win = checkWinner(xmoves)  
+    } 
+    if(player === "O"){
+      win = checkWinner(omoves);
+    }
+    if(win){
+      setWinner(true);
+      alert(`Player ${player} is the winner!`)
+      return
+    } 
     console.log(`player: `, player, `  xmoves + omoves `, xmoves, omoves, board)
-    setPlayer( () => player === "X" ? "O" : "X")
+    setPlayer( (player) => player === "X" ? "O" : "X")
   }, [board]);
 
   const checkWinner = (playerMoves) =>{
@@ -50,19 +61,19 @@ function App() {
       console.log(`Not enough tokens for a win`)
       return false;
     }
-    /*
-    Iterate through solutions
-    Check if playerMoves (xmoves or omoves) contains solutions[i]
-    *! .includes won't work for this.  Only accepts a single integer value */
-   //? Check if the gist you saved to github from recent code Challenge could be used for checkWinner?
-/*  if included setWinner(true) & return true
-    else return false
-    */
-    console.log(`Checking for a winner `, winner)
+    for(let i =  0; i < solutions.length; i++){
+      let match = playerMoves.filter((e)=> solutions[i].includes(e));
+      if( match.length === 3 ){
+        console.log(solutions[i], match, `We have a match/winner`)
+        return true
+      }
+    }
+    console.log('No winner')
+    return false;
   }
 
   const handleDraw = ()=>{
-    console.log(`It's a draw.  No moves left`)
+    alert(`It's a draw.  No moves left`)
   }
 
   const squares = [...Array(9)].map( (e, i)=>  (
@@ -72,7 +83,8 @@ function App() {
       number={i + 1} 
       value={board[i]} 
       click={handleClick}
-    ></Square> ))
+    ></Square>
+  ));
 
   return (
     <div className='App'>
