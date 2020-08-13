@@ -39,13 +39,8 @@ function App() {
   }
 
   useEffect( ()=>{
-    if(xmoves.length + omoves.length === 9){
-      handleDraw();
-      return
-    }
     let win;
     if(player === "X"){
-      //
       win = checkWinner(xmoves)  
     } 
     if(player === "O"){
@@ -55,7 +50,11 @@ function App() {
       setWinner(true);
       alert(`Player ${player} is the winner!`)
       return
-    } 
+    }
+    if(xmoves.length + omoves.length === 9){
+      handleDraw();
+      return
+    }
     setPlayer( (player) => player === "X" ? "O" : "X")
   }, [board]);
 
@@ -105,6 +104,8 @@ function App() {
     setXMoves([]);
     setOMoves([]);
     setWinner(false);
+    resetHighlight(lastWin);
+    setLastWin([]);
   }
 
   const squares = [...Array(9)].map( (e, i)=>  (
