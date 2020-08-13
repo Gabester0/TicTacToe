@@ -7,19 +7,22 @@ function App() {
 
   const [player, setPlayer] = useState("X");
   const [board, setBoard] = useState({ 
-    "0" : null,
-    "1" : null,
-    "2" : null,
-    "3" : null,
-    "4" : null,
-    "5" : null,
-    "6" : null,
-    "7" : null,
-    "8" : null,
+    //Come up a better way to initialize this object
+    //Maybe put this as a constant, and import it and set initial state to this
+    0 : null,
+    1 : null,
+    2 : null,
+    3 : null,
+    4 : null,
+    5 : null,
+    6 : null,
+    7 : null,
+    8 : null,
   });
-  const [xmoves, setxMoves] = useState([]);
-  const [omoves, setoMoves] = useState([]);
+  const [xmoves, setXMoves] = useState([]);
+  const [omoves, setOMoves] = useState([]);
   const [winner, setWinner] = useState(false);
+  const [lastWin, setLastWin] = useState([]);
 
   const solutions = [ [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6] ];
 
@@ -31,7 +34,7 @@ function App() {
         ...board,
         [curr]: player
       })
-      player === "X" ? setxMoves ([...xmoves, curr]) : setoMoves([...omoves, curr]);     
+      player === "X" ? setXMoves ([...xmoves, curr]) : setOMoves([...omoves, curr]);     
     }
   }
 
@@ -42,6 +45,7 @@ function App() {
     }
     let win;
     if(player === "X"){
+      //
       win = checkWinner(xmoves)  
     } 
     if(player === "O"){
@@ -55,6 +59,15 @@ function App() {
     setPlayer( (player) => player === "X" ? "O" : "X")
   }, [board]);
 
+  const highlightWin = (array)=>{
+    setLastWin([...array])
+    array.map((e)=> document.getElementById(e).style.backgroundColor= "blue")
+  }
+  
+  const resetHighlight = (array) => {
+    array.map((e)=> document.getElementById(e).style.backgroundColor= "#efefef")
+  }
+
   const checkWinner = (playerMoves) =>{
     if(playerMoves.length < 3) {
       console.log(`Not enough tokens for a win`)
@@ -63,7 +76,8 @@ function App() {
     for(let i =  0; i < solutions.length; i++){
       let match = playerMoves.filter((e)=> solutions[i].includes(e));
       if( match.length === 3 ){
-        console.log(solutions[i], match, `We have a match/winner`)
+        console.log(solutions[i], match, `We have a match/winner`);
+        highlightWin(match);
         return true
       }
     }
@@ -78,18 +92,18 @@ function App() {
   const resetBoard = () => {
     setPlayer("X");
     setBoard({ 
-      "0" : null,
-      "1" : null,
-      "2" : null,
-      "3" : null,
-      "4" : null,
-      "5" : null,
-      "6" : null,
-      "7" : null,
-      "8" : null,
+      0 : null,
+      1 : null,
+      2 : null,
+      3 : null,
+      4 : null,
+      5 : null,
+      6 : null,
+      7 : null,
+      8 : null,
     });
-    setxMoves([]);
-    setoMoves([]);
+    setXMoves([]);
+    setOMoves([]);
     setWinner(false);
   }
 

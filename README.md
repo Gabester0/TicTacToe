@@ -4,6 +4,10 @@
  - React
  - 
 
+Find a way to clean up the App.js 
+Put Square inside Board Component?  Need to move lines 110-118 into Board?
+
+
 Additional goals:
 -Make 1st player random
 -Sound effects on click
