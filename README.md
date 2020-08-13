@@ -5,7 +5,7 @@
  - 
 
 Additional goals:
--Handle a draw?
+-Make 1st player random
 -Sound effects on click
 -Sound effects on victory
 -Animations on victory using React-Spring (https://blog.logrocket.com/how-to-make-a-confetti-cannon-with-react-spring/)

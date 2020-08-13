@@ -52,7 +52,6 @@ function App() {
       alert(`Player ${player} is the winner!`)
       return
     } 
-    console.log(`player: `, player, `  xmoves + omoves `, xmoves, omoves, board)
     setPlayer( (player) => player === "X" ? "O" : "X")
   }, [board]);
 
@@ -76,6 +75,24 @@ function App() {
     alert(`It's a draw.  No moves left`)
   }
 
+  const resetBoard = () => {
+    setPlayer("X");
+    setBoard({ 
+      "0" : null,
+      "1" : null,
+      "2" : null,
+      "3" : null,
+      "4" : null,
+      "5" : null,
+      "6" : null,
+      "7" : null,
+      "8" : null,
+    });
+    setxMoves([]);
+    setoMoves([]);
+    setWinner(false);
+  }
+
   const squares = [...Array(9)].map( (e, i)=>  (
     <Square 
       id={i} 
@@ -90,6 +107,7 @@ function App() {
     <div className='App'>
       <h1>Tic Tac Toe Game!</h1>
       <h5>Current Player: {player}</h5>
+      <button onClick={resetBoard}>Reset game</button>
       <Board>
         {squares}
       </Board>
