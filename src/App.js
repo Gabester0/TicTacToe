@@ -6,19 +6,7 @@ import './App.css';
 function App() {
 
   const [player, setPlayer] = useState("X");
-  const [board, setBoard] = useState({ 
-    //Come up a better way to initialize this object
-    //Maybe put this as a constant, and import it and set initial state to this
-    0 : null,
-    1 : null,
-    2 : null,
-    3 : null,
-    4 : null,
-    5 : null,
-    6 : null,
-    7 : null,
-    8 : null,
-  });
+  const [board, setBoard] = useState( { ...[...Array(9)].map( ()=> null ) } );
   const [xmoves, setXMoves] = useState([]);
   const [omoves, setOMoves] = useState([]);
   const [winner, setWinner] = useState(false);
@@ -90,17 +78,7 @@ function App() {
 
   const resetBoard = () => {
     setPlayer("X");
-    setBoard({ 
-      0 : null,
-      1 : null,
-      2 : null,
-      3 : null,
-      4 : null,
-      5 : null,
-      6 : null,
-      7 : null,
-      8 : null,
-    });
+    setBoard( { ...[...Array(9)].map( ()=> null ) } );
     setXMoves([]);
     setOMoves([]);
     setWinner(false);
