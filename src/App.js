@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Board from './Board';
 import Square from './Square';
+import ConfettiDot from './ConfettiDot';
 import './App.css';
 
 function App() {
-
+//First Turn
   const [player, setPlayer] = useState("X");
   const [board, setBoard] = useState( { ...[...Array(9)].map( ()=> null ) } );
   const [xmoves, setXMoves] = useState([]);
@@ -22,7 +23,7 @@ function App() {
         ...board,
         [curr]: player
       })
-      player === "X" ? setXMoves ([...xmoves, curr]) : setOMoves([...omoves, curr]);     
+      player === "X" ? setXMoves ([...xmoves, curr]) : setOMoves([...omoves, curr]);
     }
   }
 
@@ -77,6 +78,7 @@ function App() {
   }
 
   const resetBoard = () => {
+    //First Turn
     setPlayer("X");
     setBoard( { ...[...Array(9)].map( ()=> null ) } );
     setXMoves([]);
@@ -104,6 +106,7 @@ function App() {
       <Board>
         {squares}
       </Board>
+      <ConfettiDot />
     </div>
   );
 }
