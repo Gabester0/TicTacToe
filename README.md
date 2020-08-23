@@ -4,6 +4,7 @@
  - React
  - 
 
+Need to redo SSH key for GH so no password required in order for deploying to work
 Find a way to clean up the App.js 
 Put Square inside Board Component?  Need to move lines 90-98 into Board?
 

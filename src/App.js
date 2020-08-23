@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import Board from './Board';
+import React, { useState, useEffect, useRef } from 'react';
+import Board, { highlightWin, resetHighlight } from './Board';
 import Square from './Square';
 import ConfettiDot from './ConfettiDot';
 import './App.css';
@@ -34,29 +34,17 @@ function App() {
     setPlayer( (player) => player === "X" ? "O" : "X")
   }, [board]);
 
-  const highlightWin = (array)=>{
-    setLastWin([...array])
-    array.map((e)=> document.getElementById(e).style.backgroundColor= "blue")
-    document.getElementById("board").style.opacity = 0.55;
-  }
-
-  const resetHighlight = (array) => {
-    array.map((e)=> document.getElementById(e).style.backgroundColor= "#efefef")
-    document.getElementById("board").style.opacity = 1;
-  }
-
   const checkWinner = (playerMoves) =>{
     if(playerMoves.length < 3) return false;
     for(let i =  0; i < solutions.length; i++){
       let match = playerMoves.filter((e)=> solutions[i].includes(e));
       if( match.length === 3 ){
-        highlightWin(match);
+        highlightWin(match, setLastWin);
         return true
       }
     }
     return false;
   }
-
 
   const resetBoard = () => {
     //First Turn
@@ -69,6 +57,9 @@ function App() {
     resetHighlight(lastWin);
     setLastWin([]);
   }
+
+  //Anchoring the Animation
+  const confettiAnchorRef = useRef();
 
   const squares = [...Array(9)].map( (e, i)=>  (
     <Square 
@@ -92,7 +83,13 @@ function App() {
       <Board>
         {squares}
       </Board>
-      {winner && <ConfettiDot />}
+      {/* <div ref={confettiAnchorRef} id="ref"/> */}
+      <img 
+        className={winner ? "cannon rotate" : "cannon"}
+        src={require('./static/Cannon.svg')} 
+        alt="confetti canon"
+        ref={confettiAnchorRef} />
+      {winner && <ConfettiDot anchorRef={confettiAnchorRef} />}
     </div>
   );
 }

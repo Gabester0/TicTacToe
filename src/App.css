@@ -34,3 +34,20 @@ button {
   border: 1px solid black;
   padding: 10px 20px; 
 }
+
+.cannon {
+  width: auto;
+  height: 150px;
+  /* transform: rotate(90deg); */
+  transition: transform 1s;
+}
+
+.rotate {
+  transform: rotate(0);
+}
+#ref {
+  width: 5px;
+  height: 1px;
+  background-color: black;
+  margin: 0 auto;
+}

@@ -9,19 +9,25 @@ const StyledConfettiDot = styled.svg`
 
 const AnimatedConfettiDot = animated(StyledConfettiDot);
 
-const Dot = () => {
+const alignWithAnchor = anchorRef =>{
+    if(anchorRef.current == null){
+        return {
+            initialX: 0,
+            initialY: 0,
+        }
+    }
+    // const { height, width, top} = anchorRef.current.getBoundingClientRect();
+    // console.log(height, width, top)
+    return {
+        initialX: -37.5,
+        // initialX: width / 2,
+        initialY: -15,
+    }
+}
 
-    // const { horizontal, upwards} = useSpring({
-    //     config: config.default,
-    //     from: { 
-    //         horizontal: 200,
-    //         upwards: 300
-    //     },
-    //     to: { 
-    //         horizontal: 0,
-    //         upwards: 0
-    //      },
-    // });
+const Dot = ({anchorRef}) => {
+    const { initialX, initialY } = alignWithAnchor(anchorRef);
+
     const { horizontal, upwards } = useSpring({
         config: config.default,
         from: {
@@ -34,14 +40,6 @@ const Dot = () => {
         }
       });
 
-    //   const { y } = useSpring({
-    //     config: config.default,
-    //     from: { y: 0 },
-    //     to: { y: -50 }
-    // });
-
-    const initialX = 0;
-    const initialY = 0;
     let totalHorizontal = 0;
     let totalUpwards = 0;
     const startTime = new Date().getTime() / 1000;
