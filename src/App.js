@@ -13,12 +13,10 @@ function App() {
   const [winner, setWinner] = useState(false);
   const [draw, setDraw] = useState(false);
   const [lastWin, setLastWin] = useState([]);
-
   const solutions = [ [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6] ];
 
   const handleClick = (e)=>{
     const curr = parseInt(e.target.id);
-
     if(board[curr] === null && !winner){
       setBoard({
         ...board,
@@ -31,22 +29,8 @@ function App() {
   useEffect( ()=>{
     let win;
     (player === "X") ? (win = checkWinner(xmoves)) : (win = checkWinner(omoves))
-    // if(player === "X"){
-    //   win = checkWinner(xmoves)  
-    // } 
-    // if(player === "O"){
-    //   win = checkWinner(omoves);
-    // }
-    if(win){
-      setWinner(true);
-      alert(`Player ${player} is the winner!`)
-      return
-    }
-    if(xmoves.length + omoves.length === 9){
-      setDraw(true);
-      console.log(draw)
-      return
-    }
+    if(win) return setWinner(true);
+    if(xmoves.length + omoves.length === 9) return setDraw(true);
     setPlayer( (player) => player === "X" ? "O" : "X")
   }, [board]);
 
@@ -54,25 +38,20 @@ function App() {
     setLastWin([...array])
     array.map((e)=> document.getElementById(e).style.backgroundColor= "blue")
   }
-  
+
   const resetHighlight = (array) => {
     array.map((e)=> document.getElementById(e).style.backgroundColor= "#efefef")
   }
 
   const checkWinner = (playerMoves) =>{
-    if(playerMoves.length < 3) {
-      console.log(`Not enough tokens for a win`)
-      return false;
-    }
+    if(playerMoves.length < 3) return false;
     for(let i =  0; i < solutions.length; i++){
       let match = playerMoves.filter((e)=> solutions[i].includes(e));
       if( match.length === 3 ){
-        console.log(solutions[i], match, `We have a match/winner`);
         highlightWin(match);
         return true
       }
     }
-    console.log('No winner')
     return false;
   }
 
@@ -102,7 +81,7 @@ function App() {
   return (
     <div className='App'>
       <h1>Tic Tac Toe Game!</h1>
-      <h5 style={winner ? {fontSize: 50 + `px`} : null}>
+      <h5 className={ draw ? `draw` : winner ? `winner` : null}>
         {  draw ? `The game is a draw, please restart` : !winner ? `Current Player: ${player}` : `Player ${player} is the winner!`}
       </h5>
       <button onClick={resetBoard}>Reset game</button>
