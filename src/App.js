@@ -101,12 +101,14 @@ function App() {
   return (
     <div className='App'>
       <h1>Tic Tac Toe Game!</h1>
-      <h5>Current Player: {player}</h5>
+      <h5 style={winner ? {fontSize: 50 + `px`} : null}>
+        {!winner ? `Current Player: ${player}` : `Player ${player} is the winner!`}
+      </h5>
       <button onClick={resetBoard}>Reset game</button>
       <Board>
         {squares}
       </Board>
-      <ConfettiDot />
+      {winner && <ConfettiDot />}
     </div>
   );
 }
