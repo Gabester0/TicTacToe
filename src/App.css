@@ -2,20 +2,30 @@
   text-align: center;
 }
 
+.staticBox {
+  margin: 0;
+  height: 60px;
+  width: 100%;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
 h5 {
-  margin-top: 22px;
-  margin-bottom: 22px;
+  margin: 0;
+  font-size: 16px;
 }
 
 .winner {
   font-size: 30px;
-  transition: font-size .4s;
+  transition: all .4s;
   color: blue;
+  /* margin-bottom: 19px; */
 }
 
 .draw {
   font-size: 30px;
-  transition: font-size .4s;
+  transition: all .4s;
   color: #bd0000;
 }
 

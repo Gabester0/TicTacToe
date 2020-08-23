@@ -15,4 +15,3 @@ Additional goals:
 
 -Sound effects on click
 -Sound effects on victory
--Option to choose custom board size

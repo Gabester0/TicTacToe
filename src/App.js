@@ -37,10 +37,12 @@ function App() {
   const highlightWin = (array)=>{
     setLastWin([...array])
     array.map((e)=> document.getElementById(e).style.backgroundColor= "blue")
+    document.getElementById("board").style.opacity = 0.55;
   }
 
   const resetHighlight = (array) => {
     array.map((e)=> document.getElementById(e).style.backgroundColor= "#efefef")
+    document.getElementById("board").style.opacity = 1;
   }
 
   const checkWinner = (playerMoves) =>{
@@ -81,9 +83,11 @@ function App() {
   return (
     <div className='App'>
       <h1>Tic Tac Toe Game!</h1>
-      <h5 className={ draw ? `draw` : winner ? `winner` : null}>
-        {  draw ? `The game is a draw, please restart` : !winner ? `Current Player: ${player}` : `Player ${player} is the winner!`}
-      </h5>
+      <div className="staticBox">
+        <h5 className={ draw ? `draw` : winner ? `winner` : null}>
+          {  draw ? `The game is a draw, please restart` : !winner ? `Current Player: ${player}` : `Player ${player} is the winner!`}
+        </h5>
+      </div>
       <button onClick={resetBoard}>Reset game</button>
       <Board>
         {squares}

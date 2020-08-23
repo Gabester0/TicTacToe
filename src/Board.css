@@ -1,9 +1,16 @@
-.board {
+#board {
     width: 450px;
     height: 450px;
     background-color: #efefef;
     display: grid;
     grid-template-columns: 150px 150px 150px;
     grid-template-rows: 150px 150px 150px;
+    margin: auto;
+}
+
+#background {
+    background-color: white;
+    width: 450px;
+    height: 450px;
     margin: auto;
 }

@@ -4,8 +4,10 @@ import './Board.css';
 const Board = (props)=>{
 
     return (
-        <div className="board">
-            {props.children}
+        <div id="background">
+            <div id="board">
+                {props.children}
+            </div>
         </div>
     )
 }
