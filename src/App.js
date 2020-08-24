@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Board, { highlightWin, resetHighlight } from './Board';
-import Square from './Square';
-import ConfettiCannon from './ConfettiCannon';
+import Board, { highlightWin, resetHighlight } from './components/board/Board';
+import Square from './components/square/Square';
+import ConfettiCannon from './components/ConfettiCannon';
 import './App.css';
 
 function App() {
-//First Turn
   const [player, setPlayer] = useState("X");
   const [board, setBoard] = useState( { ...[...Array(9)].map( ()=> null ) } );
   const [xmoves, setXMoves] = useState([]);
@@ -56,7 +55,6 @@ function App() {
   }
 
   const resetBoard = () => {
-    //First Turn
     setPlayer("X");
     setBoard( { ...[...Array(9)].map( ()=> null ) } );
     setXMoves([]);
@@ -68,7 +66,6 @@ function App() {
     setDelay(false)
   }
 
-  //Anchoring the Animation
   const confettiAnchorRef = useRef();
 
   const squares = [...Array(9)].map( (e, i)=>  (
@@ -98,7 +95,12 @@ function App() {
         src={require('./static/Cannon.svg')} 
         alt="confetti canon"
         ref={confettiAnchorRef} />
-      {winner && delay && <ConfettiCannon anchorRef={confettiAnchorRef} dotCount={40} />}
+      {winner && delay && (
+        <ConfettiCannon 
+          anchorRef={confettiAnchorRef}
+          dotCount={30}
+          colors={['red', 'green', 'blue', 'yellow']}
+        />)}
     </div>
   );
 }
