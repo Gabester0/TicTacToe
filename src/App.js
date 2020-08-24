@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Board, { highlightWin, resetHighlight } from './Board';
 import Square from './Square';
-import ConfettiDot from './ConfettiDot';
+import ConfettiCannon from './ConfettiCannon';
 import './App.css';
 
 function App() {
@@ -98,7 +98,7 @@ function App() {
         src={require('./static/Cannon.svg')} 
         alt="confetti canon"
         ref={confettiAnchorRef} />
-      {winner && delay && <ConfettiDot anchorRef={confettiAnchorRef} />}
+      {winner && delay && <ConfettiCannon anchorRef={confettiAnchorRef} dotCount={40} />}
     </div>
   );
 }

@@ -23,14 +23,14 @@ const alignWithAnchor = anchorRef =>{
     }
 }
 
-const Dot = ({anchorRef}) => {
+const Dot = ({anchorRef, initialHorizontal, initialVertical}) => {
     const { initialX, initialY } = alignWithAnchor(anchorRef);
 
     const { horizontal, upwards } = useSpring({
         config: config.default,
         from: {
-          horizontal: 200,
-          upwards: 300
+          horizontal: initialHorizontal,
+          upwards: initialVertical
         },
         to: {
           horizontal: 0,
