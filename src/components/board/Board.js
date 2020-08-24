@@ -1,5 +1,5 @@
 import React from 'react';
-import './Board.css';
+import { BoardDiv, Background } from './BoardStyles';
 
 export const highlightWin = (array, lastWin)=>{
     lastWin([...array])
@@ -14,11 +14,11 @@ export const resetHighlight = (array) => {
 
 const Board = (props)=>{
     return (
-        <div id="background">
-            <div id="board">
+        <Background>
+            <BoardDiv id="board">
                 {props.children}
-            </div>
-        </div>
+            </BoardDiv>
+        </Background>
     )
 }
 
