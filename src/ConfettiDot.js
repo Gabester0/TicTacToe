@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { animated, config, useSpring, interpolate } from 'react-spring';
 
@@ -16,11 +16,9 @@ const alignWithAnchor = anchorRef =>{
             initialY: 0,
         }
     }
-    // const { height, width, top} = anchorRef.current.getBoundingClientRect();
-    // console.log(height, width, top)
+
     return {
         initialX: -37.5,
-        // initialX: width / 2,
         initialY: -15,
     }
 }

@@ -13,6 +13,7 @@ function App() {
   const [winner, setWinner] = useState(false);
   const [draw, setDraw] = useState(false);
   const [lastWin, setLastWin] = useState([]);
+  const [delay, setDelay] = useState(false);
   const solutions = [ [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6] ];
 
   const handleClick = (e)=>{
@@ -40,10 +41,18 @@ function App() {
       let match = playerMoves.filter((e)=> solutions[i].includes(e));
       if( match.length === 3 ){
         highlightWin(match, setLastWin);
+        startTimer();
         return true
       }
     }
     return false;
+  }
+
+  const startTimer = ()=>{
+      const timer = setTimeout(() => {
+        setDelay(true)
+      }, 1050);
+      return () => clearTimeout(timer);
   }
 
   const resetBoard = () => {
@@ -56,6 +65,7 @@ function App() {
     setDraw(false);
     resetHighlight(lastWin);
     setLastWin([]);
+    setDelay(false)
   }
 
   //Anchoring the Animation
@@ -83,13 +93,12 @@ function App() {
       <Board>
         {squares}
       </Board>
-      {/* <div ref={confettiAnchorRef} id="ref"/> */}
       <img 
         className={winner ? "cannon rotate" : "cannon"}
         src={require('./static/Cannon.svg')} 
         alt="confetti canon"
         ref={confettiAnchorRef} />
-      {winner && <ConfettiDot anchorRef={confettiAnchorRef} />}
+      {winner && delay && <ConfettiDot anchorRef={confettiAnchorRef} />}
     </div>
   );
 }
