@@ -94,7 +94,7 @@ function App() {
         {squares}
       </Board>
       <img 
-        className={winner ? "cannon rotate" : "cannon"}
+        className={winner ? "cannon visible" : "cannon"}
         src={require('./static/Cannon.svg')} 
         alt="confetti canon"
         ref={confettiAnchorRef} />

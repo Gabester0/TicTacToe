@@ -38,10 +38,11 @@ button {
 .cannon {
   width: auto;
   height: 150px;
-  transform: rotate(90deg);
-  transition: transform 1s;
+  /* transform: rotate(90deg); */
+  transition: all 1s;
+  opacity: 0;
 }
 
-.rotate {
-  transform: rotate(0);
+.visible {
+  opacity: 1;
 }
