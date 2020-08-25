@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import Board, { highlightWin, resetHighlight } from './components/board/Board';
 import Square from './components/square/Square';
 import ConfettiCannon from './components/ConfettiCannon';
-import { AppDiv, StaticDiv, StyledH5, ResetBtn, Cannon } from './AppStyles';
+import { AppDiv, StaticDiv, StyledH5, Btn, Cannon } from './AppStyles';
+import { delayFunction } from './utility/utilities';
 
 function App(props) {
   const [player, setPlayer] = useState("X");
@@ -40,18 +41,11 @@ function App(props) {
       let match = playerMoves.filter((e)=> solutions[i].includes(e));
       if( match.length === 3 ){
         highlightWin(match, setLastWin);
-        startTimer();
+        delayFunction(delay, setDelay, 1050)
         return true
       }
     }
     return false;
-  }
-
-  const startTimer = ()=>{
-      const timer = setTimeout(() => {
-        setDelay(true)
-      }, 1050);
-      return () => clearTimeout(timer);
   }
 
   const resetBoard = () => {
@@ -83,17 +77,16 @@ function App(props) {
       <h1>Tic Tac Toe</h1>
       <StaticDiv>
         <StyledH5 draw={draw} winner={winner}>
-        {/* <StyledH5 className={ draw ? `draw` : winner ? `winner` : null}> */}
           {  draw ? `The game is a draw, please restart` : !winner ? `Current Player: ${player}` : `Player ${player} is the winner!`}
         </StyledH5>
       </StaticDiv>
-      <ResetBtn onClick={resetBoard}>Reset game</ResetBtn>
+      <Btn onClick={resetBoard}>Reset game</Btn>
       <Board>
         {squares}
       </Board>
       <Cannon 
         show={winner}
-        src={require('./static/Cannon.svg')} 
+        src={require('./static/StubbyCannon.svg')} 
         alt="confetti canon"
         ref={confettiAnchorRef} />
       {winner && delay && (

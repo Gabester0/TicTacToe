@@ -1,7 +1,7 @@
 import React from 'react';
 // import styled from 'styled-components';
 import { animated, config, useSpring, interpolate } from 'react-spring';
-import { randomInRange, flipCoin, randomFromArray } from '../../utility/random';
+import { randomInRange, flipCoin, randomFromArray } from '../../utility/utilities';
 import { StyledConfettiDotDiv } from './ConfettiDotStyles';
 
 const AnimatedConfettiDot = animated(StyledConfettiDotDiv);
@@ -13,10 +13,11 @@ const alignWithAnchor = anchorRef =>{
             initialY: 0,
         }
     }
+    const { _, width } = anchorRef.current.getBoundingClientRect();
     return {
-        initialX: -37.5,
-        initialY: -15,
-    }
+      initialX: - width / 2,
+      initialY: -5
+    };
 }
 
 const Circle = ({size, color})=>(

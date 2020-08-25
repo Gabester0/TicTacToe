@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const AppDiv = styled.div`
     text-align: center;
+    color: #390040;
 `;
 
 export const StaticDiv = styled.div`
@@ -20,7 +21,7 @@ export const StyledH5 = styled.h5`
     color: ${props => props.winner ? "blue" : props.draw ? "#bd0000" : "default"}
 `;
 
-export const ResetBtn = styled.button`
+export const Btn = styled.button`
     color: #390040;
     font-weight: bold;
     font-size: 16px;
@@ -28,12 +29,13 @@ export const ResetBtn = styled.button`
     border: 2px solid #390040;
     padding: 10px 20px;
     border-radius: 8px;
-    background-color: white;
+    background-color: #F0EFF4;
 `;
 
 export const Cannon = styled.img`
     width: auto;
-    height: 150px;
+    height: 100px;
     transition: all 1s;
     opacity: ${props => props.show ? 1 : 0};
+    margin: 10px auto;
 `;

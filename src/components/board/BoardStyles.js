@@ -3,16 +3,17 @@ import styled from 'styled-components';
 export const BoardDiv = styled.div`
     width: 450px;
     height: 450px;
-    background-color: #efefef;
+    background-color: #05A8AA;
     display: grid;
     grid-template-columns: 150px 150px 150px;
     grid-template-rows: 150px 150px 150px;
-    margin: auto;
+    border-radius: 8px;
+    padding: 4px;
 `;
 
 export const Background = styled.div`
     background-color: white;
-    width: 450px;
-    height: 450px;
+    width: 458px;
+    height: 458px;
     margin: auto;
 `;
