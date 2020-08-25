@@ -21,9 +21,14 @@ export const StyledH5 = styled.h5`
 `;
 
 export const ResetBtn = styled.button`
+    color: #390040;
+    font-weight: bold;
+    font-size: 16px;
     margin-bottom: 20px; 
-    border: 1px solid black;
-    padding: 10px 20px; 
+    border: 2px solid #390040;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background-color: white;
 `;
 
 export const Cannon = styled.img`

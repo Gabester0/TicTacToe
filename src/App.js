@@ -80,7 +80,7 @@ function App(props) {
 
   return (
     <AppDiv>
-      <h1>Tic Tac Toe Game</h1>
+      <h1>Tic Tac Toe</h1>
       <StaticDiv>
         <StyledH5 draw={draw} winner={winner}>
         {/* <StyledH5 className={ draw ? `draw` : winner ? `winner` : null}> */}
