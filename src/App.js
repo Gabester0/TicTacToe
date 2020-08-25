@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import Board, { highlightWin, resetHighlight } from './components/board/Board';
 import Square from './components/square/Square';
 import ConfettiCannon from './components/ConfettiCannon';
-import './App.css';
+import { AppDiv, StaticDiv, StyledH5, ResetBtn, Cannon } from './AppStyles';
 
-function App() {
+function App(props) {
   const [player, setPlayer] = useState("X");
   const [board, setBoard] = useState( { ...[...Array(9)].map( ()=> null ) } );
   const [xmoves, setXMoves] = useState([]);
@@ -79,19 +79,20 @@ function App() {
   ));
 
   return (
-    <div className='App'>
-      <h1>Tic Tac Toe Game!</h1>
-      <div className="staticBox">
-        <h5 className={ draw ? `draw` : winner ? `winner` : null}>
+    <AppDiv>
+      <h1>Tic Tac Toe Game</h1>
+      <StaticDiv>
+        <StyledH5 draw={draw} winner={winner}>
+        {/* <StyledH5 className={ draw ? `draw` : winner ? `winner` : null}> */}
           {  draw ? `The game is a draw, please restart` : !winner ? `Current Player: ${player}` : `Player ${player} is the winner!`}
-        </h5>
-      </div>
-      <button onClick={resetBoard}>Reset game</button>
+        </StyledH5>
+      </StaticDiv>
+      <ResetBtn onClick={resetBoard}>Reset game</ResetBtn>
       <Board>
         {squares}
       </Board>
-      <img 
-        className={winner ? "cannon visible" : "cannon"}
+      <Cannon 
+        show={winner}
         src={require('./static/Cannon.svg')} 
         alt="confetti canon"
         ref={confettiAnchorRef} />
@@ -101,7 +102,7 @@ function App() {
           dotCount={30}
           colors={['red', 'green', 'blue', 'yellow']}
         />)}
-    </div>
+    </AppDiv>
   );
 }
 

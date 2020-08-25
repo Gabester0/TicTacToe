@@ -1,13 +1,13 @@
 import React from 'react';
-import './Square.css';
+import { SquareDiv } from './SquareStyles';
 
 const Square = (props)=>{
 
     return  (
-        <div className="square" id={props.id} onClick={props.click}>
+        <SquareDiv className="square" id={props.id} onClick={props.click}>
             <p>{props.number}</p>
             <h1>{props.value}</h1>
-        </div>
+        </SquareDiv>
     )
 }
 

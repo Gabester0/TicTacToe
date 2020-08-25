@@ -1,17 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 import { animated, config, useSpring, interpolate } from 'react-spring';
-import { randomInRange, flipCoin, randomFromArray } from '../utility/random';
+import { randomInRange, flipCoin, randomFromArray } from '../../utility/random';
+import { StyledConfettiDotDiv } from './ConfettiDotStyles';
 
-const StyledConfettiDot = styled.svg`
-    position: absolute;
-    will-change: transform;
-    pointer-events: none;
-    width: 10px;
-    height: 10px;
-`;
-
-const AnimatedConfettiDot = animated(StyledConfettiDot);
+const AnimatedConfettiDot = animated(StyledConfettiDotDiv);
 
 const alignWithAnchor = anchorRef =>{
     if(anchorRef.current == null){
