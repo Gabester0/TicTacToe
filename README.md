@@ -7,6 +7,5 @@
 
 
 Additional goals:
--Move all styles into styled-components
 -Sound effects on click
 -Sound effects on victory
