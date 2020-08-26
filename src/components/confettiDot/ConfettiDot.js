@@ -1,5 +1,4 @@
 import React from 'react';
-// import styled from 'styled-components';
 import { animated, config, useSpring, interpolate } from 'react-spring';
 import { randomInRange, flipCoin, randomFromArray } from '../../utility/utilities';
 import { StyledConfettiDotDiv } from './ConfettiDotStyles';
@@ -13,10 +12,14 @@ const alignWithAnchor = anchorRef =>{
             initialY: 0,
         }
     }
-    const { _, width } = anchorRef.current.getBoundingClientRect();
+    // const { height, width } = anchorRef.current.getBoundingClientRect();
+    // return {
+    //   initialX: - width / 2,
+    //   initialY: -5
+    // };
     return {
-      initialX: - width / 2,
-      initialY: -5
+        initialX: -220,
+        initialY: - 250
     };
 }
 

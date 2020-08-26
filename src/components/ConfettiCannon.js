@@ -12,7 +12,7 @@ const ConfettiCannon = ({anchorRef, colors, dotCount})=>(
                 initialHorizontal={randomInRange(-250, 250) }
                 initialVertical={randomInHighRange(200, 550) }
                 rotate={randomInRange(0, 360)}
-                size={randomInRange(10, 20)}
+                size={randomInRange(10, 25)}
             />
         ) )}
     </>

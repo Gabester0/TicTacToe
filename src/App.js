@@ -27,26 +27,26 @@ function App(props) {
     }
   }
 
-  useEffect( ()=>{
-    let win;
-    (player === "X") ? (win = checkWinner(xmoves)) : (win = checkWinner(omoves))
-    if(win) return setWinner(true);
-    if(xmoves.length + omoves.length === 9) return setDraw(true);
-    setPlayer( (player) => player === "X" ? "O" : "X")
-  }, [board]);
-
-  const checkWinner = (playerMoves) =>{
-    if(playerMoves.length < 3) return false;
+  const checkWinner = () =>{
+    const currentMoves = (player === "X") ? xmoves : omoves;
+    if(currentMoves.length < 3) return false;
     for(let i =  0; i < solutions.length; i++){
-      let match = playerMoves.filter((e)=> solutions[i].includes(e));
+      let match = currentMoves.filter((e)=> solutions[i].includes(e));
       if( match.length === 3 ){
-        highlightWin(match, setLastWin);
+        highlightWin(match, setLastWin, player);
         delayFunction(delay, setDelay, 1050)
         return true
       }
     }
     return false;
   }
+
+  useEffect( ()=>{
+    const win = checkWinner();
+    if(win) return setWinner(true);
+    if(xmoves.length + omoves.length === 9) return setDraw(true);
+    if(xmoves.length +omoves.length >= 1) setPlayer( (player) => player === "X" ? "O" : "X")
+  }, [board, xmoves, omoves]);
 
   const resetBoard = () => {
     setPlayer("X");
@@ -93,8 +93,8 @@ function App(props) {
         <ConfettiCannon 
           anchorRef={confettiAnchorRef}
           dotCount={30}
-          colors={['red', 'green', 'blue', 'yellow']}
-        />)}
+          colors={['red', 'green', 'blue', 'yellow']} />
+      )}
     </AppDiv>
   );
 }
