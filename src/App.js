@@ -76,7 +76,7 @@ function App(props) {
     <AppDiv>
       <h1>Tic Tac Toe</h1>
       <StaticDiv>
-        <StyledH5 draw={draw} winner={winner}>
+        <StyledH5 draw={draw} winner={winner} player={(player === "X")}>
           {  draw ? `The game is a draw, please restart` : !winner ? `Current Player: ${player}` : `Player ${player} is the winner!`}
         </StyledH5>
       </StaticDiv>

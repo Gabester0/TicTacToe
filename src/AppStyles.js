@@ -17,9 +17,16 @@ export const StaticDiv = styled.div`
 export const StyledH5 = styled.h5`
     margin: 0;
     font-size: ${ props => (props.winner || props.draw) ? "30px" : "16px" };
+    font-weight: bold;
     transition: all .4s;
-    color: ${props => props.winner ? "blue" : props.draw ? "#bd0000" : "default"}
-`;
+    color: ${ props =>
+        props.draw ?
+            "#390040" :
+                props.player ?
+                    "#bd0000" :
+                        "#4464AD"
+    }
+    `;
 
 export const Btn = styled.button`
     color: #390040;
