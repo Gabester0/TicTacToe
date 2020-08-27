@@ -4,6 +4,7 @@ import Square from './components/square/Square';
 import ConfettiCannon from './components/ConfettiCannon';
 import { AppDiv, StaticDiv, StyledH5, Btn, Cannon } from './AppStyles';
 import { delayFunction } from './utility/utilities';
+const clickAudio = require('./static/wood-click-1.wav');
 
 function App(props) {
   const [player, setPlayer] = useState("X");
@@ -20,7 +21,7 @@ function App(props) {
     const curr = parseInt(e.target.id);
     if(board[curr] === null && !winner){
       const audio = document.getElementById('clickAudio');
-      audio.volume = .1;
+      audio.volume = .4;
       audio.play()
       setBoard({
         ...board,
@@ -92,8 +93,8 @@ function App(props) {
       <Btn onClick={resetBoard}>Reset game</Btn>
       <Board>
         {squares}
-        <audio id="clickAudio">
-            <source src={require('./static/wood-click-1.wav')} />
+        <audio id="clickAudio" preload="auto">
+            <source src={clickAudio} />
         </audio>
       </Board>
       <Cannon 
@@ -107,7 +108,7 @@ function App(props) {
           dotCount={30}
           colors={['red', 'green', 'blue', 'yellow']} />
       )}
-        <audio id="popAudio">
+        <audio id="popAudio" preload="none">
           <source src={require('./static/vs-pop-1.mp3')} />
       </audio>
     </AppDiv>

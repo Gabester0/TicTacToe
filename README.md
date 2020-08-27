@@ -7,7 +7,7 @@
 
 
 Additional goals:
--Fix first click of first game delay problem
+-Find way to delay confetti by just a fraction of a second
 -Simplify App.js file https://stackoverflow.com/questions/54895883/reset-to-initial-state-with-react-hooks
 -Create an express server
 -A queuing system for remote players
