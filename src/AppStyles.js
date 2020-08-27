@@ -44,4 +44,7 @@ export const Cannon = styled.img`
     transition: all 1s;
     opacity: ${props => props.show ? 1 : 0};
     margin: 10px auto;
+    color: #390040;
 `;
+
+// Color Scheme: #F0EFF4 #05A8AA #390040 #4464AD #E55934
