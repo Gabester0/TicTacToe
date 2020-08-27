@@ -9,13 +9,13 @@ const alignWithAnchor = anchorRef =>{
     if(anchorRef.current == null){
         return {
             initialX: 0,
-            initialY: 0,
+            initialY: 0
         }
     }
     // const { height, width } = anchorRef.current.getBoundingClientRect();
     // return {
-    //   initialX: - width / 2,
-    //   initialY: -5
+    //   initialX: - 70,
+    //   initialY: 30
     // };
     return {
         initialX: -220,
@@ -69,15 +69,15 @@ const Dot = ({anchorRef, color, initialHorizontal, initialVertical, rotate, size
         config: config.default,
         from: {
           horizontal: initialHorizontal,
-          opacity: 80,
-          zIndex: 1,
           upwards: initialVertical,
+          zIndex: 1,
+          opacity: 80,
         },
         to: {
           horizontal: 0,
-          opacity: 0,
-          zIndex: -1,
           upwards: 0,
+          zIndex: -1,
+          opacity: 0,
         }
       });
 

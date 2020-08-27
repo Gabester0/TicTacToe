@@ -10,9 +10,9 @@ const ConfettiCannon = ({anchorRef, colors, dotCount})=>(
                 color={ colors[randomIntRange(0, colors.length)] }
                 anchorRef={anchorRef}
                 initialHorizontal={randomInRange(-250, 250) }
-                initialVertical={randomInHighRange(50, 150) }
+                initialVertical={randomInRange(200, 700) }
                 rotate={randomInRange(0, 360)}
-                size={randomInRange(10, 25)}
+                size={randomInRange(8, 22)}
             />
         ) )}
     </>
