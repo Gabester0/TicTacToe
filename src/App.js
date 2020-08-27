@@ -19,6 +19,9 @@ function App(props) {
   const handleClick = (e)=>{
     const curr = parseInt(e.target.id);
     if(board[curr] === null && !winner){
+      const audio = document.getElementById('clickAudio');
+      audio.volume = .075;
+      audio.play()
       setBoard({
         ...board,
         [curr]: player
@@ -40,6 +43,12 @@ function App(props) {
     }
     return false;
   }
+
+  useEffect(()=>{
+    const popAudio = document.getElementById("popAudio");
+    popAudio.volume = 1;
+    if(delay) popAudio.play();
+  },[delay])
 
   useEffect( ()=>{
     const win = checkWinner();
@@ -83,6 +92,9 @@ function App(props) {
       <Btn onClick={resetBoard}>Reset game</Btn>
       <Board>
         {squares}
+        <audio id="clickAudio">
+            <source src={require('./static/wood-click-1.wav')} />
+        </audio>
       </Board>
       <Cannon 
         show={winner}
@@ -95,6 +107,9 @@ function App(props) {
           dotCount={30}
           colors={['red', 'green', 'blue', 'yellow']} />
       )}
+        <audio id="popAudio">
+          <source src={require('./static/vs-pop-1.mp3')} />
+      </audio>
     </AppDiv>
   );
 }
