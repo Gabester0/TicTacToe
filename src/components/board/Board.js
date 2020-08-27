@@ -1,8 +1,8 @@
 import React from 'react';
 import { BoardDiv, Background } from './BoardStyles';
 
-export const highlightWin = (array, lastWin, player)=>{
-    lastWin([...array]);
+export const highlightWin = (array, setLastWin, lastWin, player)=>{
+    setLastWin([...lastWin, array])
     const color = player === "X" ? "#bd0000" : "#4464AD";
     array.map((e)=> document.getElementById(e).style.backgroundColor= color)
   }

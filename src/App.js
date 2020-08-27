@@ -37,7 +37,7 @@ function App(props) {
     for(let i =  0; i < solutions.length; i++){
       let match = currentMoves.filter((e)=> solutions[i].includes(e));
       if( match.length === 3 ){
-        highlightWin(match, setLastWin, player);
+        highlightWin(match, setLastWin, lastWin, player);
         delayFunction(delay, setDelay, 1050)
         return true
       }
@@ -65,8 +65,7 @@ function App(props) {
     setOMoves([]);
     setWinner(false);
     setDraw(false);
-    resetHighlight(lastWin);
-    setLastWin([]);
+    resetHighlight(lastWin[lastWin.length - 1]);
     setDelay(false)
   }
 
