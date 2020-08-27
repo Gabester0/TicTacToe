@@ -46,5 +46,4 @@ export const Cannon = styled.img`
     margin: 10px auto;
     color: #390040;
 `;
-
 // Color Scheme: #F0EFF4 #05A8AA #390040 #4464AD #E55934
