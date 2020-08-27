@@ -20,7 +20,7 @@ function App(props) {
     const curr = parseInt(e.target.id);
     if(board[curr] === null && !winner){
       const audio = document.getElementById('clickAudio');
-      audio.volume = .075;
+      audio.volume = .1;
       audio.play()
       setBoard({
         ...board,
