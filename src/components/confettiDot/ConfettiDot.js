@@ -19,7 +19,7 @@ const alignWithAnchor = anchorRef =>{
     // };
     return {
         initialX: -220,
-        initialY: - 250
+        initialY: - 240
     };
 }
 

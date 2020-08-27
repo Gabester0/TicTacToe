@@ -105,7 +105,7 @@ function App(props) {
       {winner && delay && (
         <ConfettiCannon 
           anchorRef={confettiAnchorRef}
-          dotCount={30}
+          dotCount={50}
           colors={['red', 'green', 'blue', 'yellow']} />
       )}
         <audio id="popAudio" preload="none">
