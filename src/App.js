@@ -17,12 +17,16 @@ function App(props) {
   const [delay, setDelay] = useState(false);
   const solutions = [ [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6] ];
 
+  const playAudio = (id, volume)=>{
+    const audio = document.getElementById(id);
+    if(volume !== undefined) audio.volume = volume;
+    console.log(volume)
+    audio.play();
+  }
   const handleClick = (e)=>{
     const curr = parseInt(e.target.id);
     if(board[curr] === null && !winner){
-      const audio = document.getElementById('clickAudio');
-      audio.volume = .4;
-      audio.play()
+      playAudio(`clickAudio`, .4);
       setBoard({
         ...board,
         [curr]: player
@@ -46,9 +50,7 @@ function App(props) {
   }
 
   useEffect(()=>{
-    const popAudio = document.getElementById("popAudio");
-    popAudio.volume = 1;
-    if(delay) popAudio.play();
+    if(delay) playAudio(`popAudio`)
   },[delay])
 
   useEffect( ()=>{
