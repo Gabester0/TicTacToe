@@ -20,9 +20,9 @@ function App(props) {
   const playAudio = (id, volume)=>{
     const audio = document.getElementById(id);
     if(volume !== undefined) audio.volume = volume;
-    console.log(volume)
     audio.play();
   }
+
   const handleClick = (e)=>{
     const curr = parseInt(e.target.id);
     if(board[curr] === null && !winner){
@@ -34,6 +34,14 @@ function App(props) {
       player === "X" ? setXMoves ([...xmoves, curr]) : setOMoves([...omoves, curr]);
     }
   }
+  
+  useEffect( ()=>{
+    const win = checkWinner();
+    if(win) return setWinner(true);
+    if(xmoves.length + omoves.length === 9) return setDraw(true);
+    // if(xmoves.length +omoves.length >= 1) 
+    setPlayer( (player) => player === "X" ? "O" : "X")
+  }, [board, xmoves, omoves]);
 
   const checkWinner = () =>{
     const currentMoves = (player === "X") ? xmoves : omoves;
@@ -42,7 +50,7 @@ function App(props) {
       let match = currentMoves.filter((e)=> solutions[i].includes(e));
       if( match.length === 3 ){
         highlightWin(match, setLastWin, lastWin, player);
-        delayFunction(delay, setDelay, 1050)
+        delayFunction(1050, setDelay, delay)
         return true
       }
     }
@@ -52,13 +60,6 @@ function App(props) {
   useEffect(()=>{
     if(delay) playAudio(`popAudio`)
   },[delay])
-
-  useEffect( ()=>{
-    const win = checkWinner();
-    if(win) return setWinner(true);
-    if(xmoves.length + omoves.length === 9) return setDraw(true);
-    if(xmoves.length +omoves.length >= 1) setPlayer( (player) => player === "X" ? "O" : "X")
-  }, [board, xmoves, omoves]);
 
   const resetBoard = () => {
     setPlayer("X");

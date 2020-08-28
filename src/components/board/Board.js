@@ -9,6 +9,7 @@ export const highlightWin = (array, setLastWin, lastWin, player)=>{
 
 export const resetHighlight = (array) => {
     array.map((e)=> document.getElementById(e).style.backgroundColor= "#ffffff")
+    //???
     document.getElementById("board").style.opacity = 1;
   }
 
