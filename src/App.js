@@ -21,14 +21,9 @@ function App(props) {
     const win = checkWinner();
     if(win) return setWinner(true);
     if(xmoves.length + omoves.length === 9) return setDraw(true);
-    // if(xmoves.length +omoves.length >= 1) 
-    setPlayer( (player) => player === "X" ? "O" : "X")
+    //Conditional logic keeps extra render from toggling player before first move
+    if(xmoves.length +omoves.length >= 1) setPlayer( (player) => player === "X" ? "O" : "X")
   }, [board, xmoves, omoves]);
-
-  // useEffect(()=>{
-  //   if(delay) playAudio(`popAudio`)
-  // },[delay])
-
 
   const playAudio = (id, volume)=>{
     const audio = document.getElementById(id);
