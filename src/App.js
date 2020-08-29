@@ -25,9 +25,9 @@ function App(props) {
     setPlayer( (player) => player === "X" ? "O" : "X")
   }, [board, xmoves, omoves]);
 
-  useEffect(()=>{
-    if(delay) playAudio(`popAudio`)
-  },[delay])
+  // useEffect(()=>{
+  //   if(delay) playAudio(`popAudio`)
+  // },[delay])
 
 
   const playAudio = (id, volume)=>{
@@ -55,7 +55,8 @@ function App(props) {
       let match = currentMoves.filter((e)=> solutions[i].includes(e));
       if( match.length === 3 ){
         highlightWin(match, setLastWin, lastWin, player);
-        delayFunction(1050, setDelay, delay)
+        delayFunction(1050, playAudio, "popAudio")
+        delayFunction(1150, setDelay, !delay)
         return true
       }
     }

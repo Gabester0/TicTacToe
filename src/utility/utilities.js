@@ -12,7 +12,9 @@ export const flipCoin = () => Math.round( Math.random() ) === 1;
 
 export const delayFunction = (time, setBooleanState, oldState)=>{
     let timer = setTimeout(() => {
-      setBooleanState((oldState)=> ! oldState)
+      console.log(`delay: `, time)
+      setBooleanState(oldState)
+      // setBooleanState((oldState)=> ! oldState)
     }, time);
     return () => clearTimeout(timer);
 }
