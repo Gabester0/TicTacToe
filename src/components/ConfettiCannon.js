@@ -1,6 +1,6 @@
 import React from 'react';
 import ConfettiDot from './confettiDot/ConfettiDot';
-import { randomInRange, randomInHighRange, randomIntRange} from '../utility/utilities';
+import { randomInRange, randomIntRange} from '../utility/utilities';
 
 const ConfettiCannon = ({anchorRef, colors, dotCount})=>(
     <>

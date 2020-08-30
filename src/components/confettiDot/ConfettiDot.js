@@ -12,15 +12,6 @@ const alignWithAnchor = anchorRef =>{
             initialY: 0
         }
     }
-    // const { height, width } = anchorRef.current.getBoundingClientRect();
-    // return {
-    //   initialX: width / 2,
-    //   initialY: height / 2
-    // };
-    // return {
-    //   initialX: - 70,
-    //   initialY: 30
-    // };
     return {
         initialX: -220,
         initialY: - 240

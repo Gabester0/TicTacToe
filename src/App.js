@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Board, { highlightWin, resetHighlight } from './components/board/Board';
-import Square from './components/square/Square';
 import ConfettiCannon from './components/ConfettiCannon';
 import { AppDiv, StaticDiv, StyledH5, Btn, Cannon } from './AppStyles';
 import { delayFunction } from './utility/utilities';
@@ -71,16 +70,6 @@ function App(props) {
 
   const confettiAnchorRef = useRef();
 
-  const squares = [...Array(9)].map( (e, i)=>  (
-    <Square 
-      id={i} 
-      key={i} 
-      number={i + 1} 
-      value={board[i]} 
-      click={handleClick}
-    ></Square>
-  ));
-
   return (
     <AppDiv>
       <h1>Tic Tac Toe</h1>
@@ -90,12 +79,10 @@ function App(props) {
         </StyledH5>
       </StaticDiv>
       <Btn onClick={resetBoard}>Reset game</Btn>
-      <Board>
-        {squares}
-        <audio id="clickAudio" preload="auto">
-            <source src={clickAudio} />
-        </audio>
-      </Board>
+      <Board handleClick={handleClick} board={board} />
+      <audio id="clickAudio" preload="auto">
+          <source src={clickAudio} />
+      </audio>
       <Cannon 
         show={winner}
         src={require('./static/StubbyCannon.svg')} 
