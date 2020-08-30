@@ -64,7 +64,7 @@ function App(props) {
     setOMoves([]);
     setWinner(false);
     setDraw(false);
-    resetHighlight(lastWin[lastWin.length - 1]);
+    if(lastWin.length >= 1) resetHighlight(lastWin[lastWin.length - 1]);
     setDelay(false)
   }
 
