@@ -8,13 +8,19 @@
 
 # Remaining goals:
 
+### - Small frontend issues:
+> - Create a favicon and replace existing React favicon
+> - Change title in index.html
+> - Change twitter and FB social meta links (see Markdown Previewer project)
+> - Research and update manifest.json in public folder
+
 ### -First figure out how to deploy this:
 > - Separate hosting for FE & BE Y/N?
-> > - https://www.youtube.com/watch?v=71wSzpLyW9k
+>> - https://www.youtube.com/watch?v=71wSzpLyW9k
 > - Vercel/Next.js Y/N? https://www.youtube.com/watch?v=oOFTYYVYRR0
 > - Netlify Y/N?  
-> > - https://www.youtube.com/watch?v=hQAu0YEIF0g
-> > - https://www.netlify.com/blog/2018/09/13/how-to-run-express.js-apps-with-netlify-functions/
+>> - https://www.youtube.com/watch?v=hQAu0YEIF0g
+>> - https://www.netlify.com/blog/2018/09/13/how-to-run-express.js-apps-with-netlify-functions/
 > - Firebase Y/N? - Possibility
 > - *AWS EC2? -- N Free for a year only*
 > - *GH Pages -- N (only ideal for static pages)*
