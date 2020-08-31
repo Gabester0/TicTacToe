@@ -10,9 +10,14 @@
 
 ### -First figure out how to deploy this:
 > - Separate hosting for FE & BE Y/N?
-> - Vercel/Next.js Y/N?
-> - GH Pages Y/N?
-> - Firebase Y/N?
+> > - https://www.youtube.com/watch?v=71wSzpLyW9k
+> - Vercel/Next.js Y/N? https://www.youtube.com/watch?v=oOFTYYVYRR0
+> - Netlify Y/N?  
+> > - https://www.youtube.com/watch?v=hQAu0YEIF0g
+> > - https://www.netlify.com/blog/2018/09/13/how-to-run-express.js-apps-with-netlify-functions/
+> - Firebase Y/N? - Possibility
+> - *AWS EC2? -- N Free for a year only*
+> - *GH Pages -- N (only ideal for static pages)*
 > - Will folder structure affect deployment?
 > - Separate Client and Server Repos or one Repo with separate folders?
 > - Will it be a manual upload, plug in to GH Repo, or connect with CLI?
