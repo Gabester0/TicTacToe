@@ -33,9 +33,15 @@ export const Btn = styled.button`
     font-size: 16px;
     margin-bottom: 20px; 
     border: 2px solid #390040;
-    padding: 10px 20px;
     border-radius: 8px;
+    padding: 10px 20px;
     background-color: #F0EFF4;
+    :&focus{
+        border: 2px solid #390040;
+        border-radius: 8px;
+        outline: none;
+        box-shadow: 0 0 0 2px blue;
+    }
 `;
 
 export const Cannon = styled.img`
