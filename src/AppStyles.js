@@ -36,11 +36,10 @@ export const Btn = styled.button`
     border-radius: 8px;
     padding: 10px 20px;
     background-color: #F0EFF4;
-    :&focus{
-        border: 2px solid #390040;
-        border-radius: 8px;
+    box-shadow: 0 0 0 1px white;
+    &:focus{
         outline: none;
-        box-shadow: 0 0 0 2px blue;
+        box-shadow: 0 0 0 1px blue;
     }
 `;
 
