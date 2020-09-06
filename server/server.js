@@ -1,6 +1,8 @@
 const express = require(`express`);
 const app = express();
 require(`dotenv`).config();
+const options = {}
+const io = require(`socket.io`)(app, options)
 const port = process.env.PORT;
 
 app.get(`/`, (req, res)=>{
