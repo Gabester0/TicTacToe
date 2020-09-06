@@ -15,20 +15,11 @@
 
 ### -First figure out how to deploy this:
 > - Separate hosting for FE & BE? - Y
->> - https://www.youtube.com/watch?v=71wSzpLyW9k
-
-> - Netlify Y/N?  - Y for FE
->> - https://www.youtube.com/watch?v=hQAu0YEIF0g
->> - https://www.netlify.com/blog/2018/09/13/how-to-run-express.js-apps-with-netlify-functions/
-
-> - Vercel/Next.js Y/N? https://www.youtube.com/watch?v=oOFTYYVYRR0
-> - Firebase Y/N? - Possibility
-
-> - Will folder structure affect deployment?
-> - Separate Client and Server Repos or one Repo with separate folders?
+> - Netlify Y/N? Front End - Y
+> - Firebase Y/N? Back End - Possibility
+> - Zeit/next Y/N? Back End - Possibility
 
 ### -Create an express server:
-> - Authentication Required? --N
 > - Authentication optional Y/N?
 
 ### -A queuing system for remote players

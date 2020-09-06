@@ -7,7 +7,7 @@ const clickAudio = require('./static/wood-click-1.wav');
 
 function App(props) {
   const [player, setPlayer] = useState("X");
-  const [board, setBoard] = useState( { ...[...Array(9)].map( ()=> null ) } );
+  const [board, setBoard] = useState( { ...Array(9).fill(null) } );
   const [xmoves, setXMoves] = useState([]);
   const [omoves, setOMoves] = useState([]);
   const [winner, setWinner] = useState(false);
@@ -59,7 +59,7 @@ function App(props) {
 
   const resetBoard = () => {
     setPlayer("X");
-    setBoard( { ...[...Array(9)].map( ()=> null ) } );
+    setBoard( { ...Array(9).fill(null) } );
     setXMoves([]);
     setOMoves([]);
     setWinner(false);
