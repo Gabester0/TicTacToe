@@ -3,6 +3,7 @@ import Board, { highlightWin, resetHighlight } from './components/board/Board';
 import ConfettiCannon from './components/ConfettiCannon';
 import { AppDiv, StaticDiv, StyledH5, Btn, Cannon } from './AppStyles';
 import { delayFunction } from './utility/utilities';
+import io from 'socket.io';
 const clickAudio = require('./static/wood-click-1.wav');
 
 function App(props) {
@@ -23,6 +24,8 @@ function App(props) {
     //Conditional logic keeps extra render from toggling player before first move
     if(xmoves.length +omoves.length >= 1) setPlayer( (player) => player === "X" ? "O" : "X")
   }, [board, xmoves, omoves]);
+
+  // var socket = io();
 
   const playAudio = (id, volume)=>{
     const audio = document.getElementById(id);
