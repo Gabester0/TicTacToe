@@ -28,6 +28,7 @@ function App(props) {
   useEffect( ()=>{
     const socket = io('http:///localhost:5005');
     console.log('Connecting Socket...')
+    if(socket) console.log(socket, `connected`)
     socket.on('connect', (socket)=>{
       console.log(`Socket Connected!`, socket.connected)
     })
