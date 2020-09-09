@@ -3,7 +3,7 @@ import Board, { highlightWin, resetHighlight } from './components/board/Board';
 import ConfettiCannon from './components/ConfettiCannon';
 import { AppDiv, StaticDiv, StyledH5, Btn, Cannon } from './AppStyles';
 import { delayFunction } from './utility/utilities';
-import io from 'socket.io';
+import io from 'socket.io-client';
 const clickAudio = require('./static/wood-click-1.wav');
 
 function App(props) {
@@ -25,7 +25,13 @@ function App(props) {
     if(xmoves.length +omoves.length >= 1) setPlayer( (player) => player === "X" ? "O" : "X")
   }, [board, xmoves, omoves]);
 
-  // var socket = io();
+  useEffect( ()=>{
+    const socket = io('http:///localhost:5005');
+    console.log('Connecting Socket...')
+    socket.on('connect', (socket)=>{
+      console.log(`Socket Connected!`, socket.connected)
+    })
+  }, [])
 
   const playAudio = (id, volume)=>{
     const audio = document.getElementById(id);
