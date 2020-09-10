@@ -3,9 +3,11 @@ require(`dotenv`).config();
 const express = require(`express`);
 const app = express();
 const options = {};
-const http = require(`http`);
+const http = require(`http`).Server(app);
 const io = require("socket.io").listen(http);//, { perMessageDeflate: false }
 const port = process.env.PORT;
+const cors = require('cors');
+app.use(cors);
 
 app.get(`/`, (req, res)=>{
     res.send(`Hello world`)
