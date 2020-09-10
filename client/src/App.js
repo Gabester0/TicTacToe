@@ -26,7 +26,7 @@ function App(props) {
   }, [board, xmoves, omoves]);
 
   useEffect( ()=>{
-    const socket = io('http:///localhost:5005');
+    const socket = io.connect('http://localhost:5000');
     console.log('Connecting Socket...')
     if(socket.connected) console.log(socket, `connected`)
     socket.on('connection', (socket)=>{
