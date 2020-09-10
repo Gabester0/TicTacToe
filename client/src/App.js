@@ -28,9 +28,12 @@ function App(props) {
   useEffect( ()=>{
     const socket = io('http:///localhost:5005');
     console.log('Connecting Socket...')
-    if(socket) console.log(socket, `connected`)
-    socket.on('connect', (socket)=>{
+    if(socket.connected) console.log(socket, `connected`)
+    socket.on('connection', (socket)=>{
       console.log(`Socket Connected!`, socket.connected)
+    })
+    socket.on("message", (data)=>{
+      console.log(`Server message: ${data.note}`)
     })
   }, [])
 
