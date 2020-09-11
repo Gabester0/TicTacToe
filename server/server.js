@@ -1,24 +1,17 @@
 require(`dotenv`).config();
 
-const express = require(`express`);
-const app = express();
-const options = {};
-const http = require(`http`).Server(app);
-const io = require("socket.io").listen(http);//, { perMessageDeflate: false }
-const port = process.env.PORT;
-const cors = require('cors');
-app.use(cors);
+const app = require('express')();
+const server = require('http').createServer(app);
+const options = { /* ... */ }; //{ perMessageDeflate: false }
+const io = require('socket.io')(server, options);
 
 app.get(`/`, (req, res)=>{
-    res.send(`Hello world`)
-
-    io.on(`connection`, socket=> {
-        console.log(`Socket Connected`, socket)
-        io.emit("message", {note: "I am your server"})
-    })
+    res.send(`Hello world from ${process.env.PORT}`)
 });
 
+io.on('connection', socket => { 
+    console.log(`Socket Connected`, socket.id)
+    socket.emit("message", {note: "I am your server"})
+ });
 
-app.listen(port, ()=>{
-    console.log(`Server is listening on port ${port}`)
-})
+server.listen(process.env.PORT, ()=> console.log(`Server is listening on ${process.env.PORT}`));
