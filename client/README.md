@@ -19,16 +19,11 @@
 > - Firebase Y/N? Back End - Possibility
 > - Zeit/next Y/N? Back End - Possibility
 
-### -Create an express server:
-> - Authentication optional Y/N?
-
-### -A queuing system for remote players
-> - Is this better to create from scratch Y/N?
-> - Is there an existing technology that would be good for this Y/N?
+### -A way to handle multiple game instances from one server instance
 
 ### -Separate logic between Client and Server:
 > - Will any functions need to be rewritten because they contain both server and client logic Y/N?
-> - Which functions should work effectively as is if moved to the correct locations?
+> - Which functions should work effectively as-is when moved to the correct locations?
 > - **Server:**
 >> - 
 > - **Client:**
