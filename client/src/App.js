@@ -16,6 +16,7 @@ function App(props) {
   const [lastWin, setLastWin] = useState([]);
   const [delay, setDelay] = useState(false);
   const solutions = [ [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6] ];
+  let socket;
 
   useEffect( ()=>{
     const win = checkWinner();
@@ -26,7 +27,7 @@ function App(props) {
   }, [board, xmoves, omoves]);
 
   useEffect( ()=>{
-    const socket = io.connect('http://localhost:5005/');
+    socket = io.connect('http://localhost:5005/');
     console.log('Connecting Socket...')
     socket.on('connection', (socket)=>{
       console.log(`Socket Connected!`, socket.connected)
@@ -45,6 +46,8 @@ function App(props) {
   const handleClick = (e)=>{
     const curr = parseInt(e.target.id);
     if(board[curr] === null && !winner){
+      //This doesn't seem to work?
+      // socket.emit(`click`, {clicked: curr, player: player})
       playAudio(`clickAudio`, .4);
       setBoard({
         ...board,
