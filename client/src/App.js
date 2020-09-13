@@ -4,9 +4,11 @@ import ConfettiCannon from './components/ConfettiCannon';
 import { AppDiv, StaticDiv, StyledH5, Btn, Cannon } from './AppStyles';
 import { delayFunction } from './utility/utilities';
 import io from 'socket.io-client';
+import useSocket from 'use-socket.io-client';
 const clickAudio = require('./static/wood-click-1.wav');
 
 function App(props) {
+  const [socket] = useSocket('http://localhost:5005/');
   const [player, setPlayer] = useState("X");
   const [board, setBoard] = useState( { ...Array(9).fill(null) } );
   const [xmoves, setXMoves] = useState([]);
@@ -16,7 +18,6 @@ function App(props) {
   const [lastWin, setLastWin] = useState([]);
   const [delay, setDelay] = useState(false);
   const solutions = [ [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6] ];
-  let socket;
 
   useEffect( ()=>{
     const win = checkWinner();
@@ -27,8 +28,8 @@ function App(props) {
   }, [board, xmoves, omoves]);
 
   useEffect( ()=>{
-    socket = io.connect('http://localhost:5005/');
-    console.log('Connecting Socket...')
+    // socket = io.connect('http://localhost:5005/');
+    // console.log('Connecting Socket...')
     socket.on('connection', (socket)=>{
       console.log(`Socket Connected!`, socket.connected)
     })
