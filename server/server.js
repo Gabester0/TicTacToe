@@ -12,10 +12,11 @@ const io = require('socket.io')(server, options);
 io.on('connection', socket => { 
     console.log(`Socket Connected`, socket.id)
     socket.emit("message", {note: "I am your server"})
+
+    socket.on('click', socket=>{
+       console.log(socket)
+    })
  });
 
- io.on('click', (data)=>{
-    console.log(`Player ${data.player} clicked ${data.clicked} `)
- })
 
 server.listen(process.env.PORT, ()=> console.log(`Server is listening on ${process.env.PORT}`));
