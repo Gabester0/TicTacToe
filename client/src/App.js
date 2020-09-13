@@ -8,9 +8,10 @@ import useSocket from 'use-socket.io-client';
 const clickAudio = require('./static/wood-click-1.wav');
 
 function App(props) {
-  const [socket] = useSocket('http://localhost:5005/');
+  const [socket] = useSocket('http://localhost:5005/', {autoConnect: false});
   const [player, setPlayer] = useState("X");
   const [board, setBoard] = useState( { ...Array(9).fill(null) } );
+  const [lastMove, setlastMove] = useState();
   const [xmoves, setXMoves] = useState([]);
   const [omoves, setOMoves] = useState([]);
   const [winner, setWinner] = useState(false);
@@ -28,6 +29,7 @@ function App(props) {
   }, [board, xmoves, omoves]);
 
   useEffect( ()=>{
+    socket.connect();
     // socket = io.connect('http://localhost:5005/');
     // console.log('Connecting Socket...')
     socket.on('connection', (socket)=>{
@@ -38,6 +40,11 @@ function App(props) {
     })
   }, [])
 
+  useEffect(()=>{
+    socket.emit(`click`, {clicked: lastMove, player: player})
+  }, [lastMove])
+
+
   const playAudio = (id, volume)=>{
     const audio = document.getElementById(id);
     if(volume !== undefined) audio.volume = volume;
@@ -47,8 +54,7 @@ function App(props) {
   const handleClick = (e)=>{
     const curr = parseInt(e.target.id);
     if(board[curr] === null && !winner){
-      //This doesn't seem to work?
-      // socket.emit(`click`, {clicked: curr, player: player})
+      setlastMove(curr);
       playAudio(`clickAudio`, .4);
       setBoard({
         ...board,
