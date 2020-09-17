@@ -8,11 +8,6 @@
 
 # Remaining goals:
 
-### - Small frontend issues:
-> - Create a favicon and replace existing React favicon
-> - Change twitter and FB social meta links (see Markdown Previewer project)
-> - Research and update manifest.json in public folder
-
 ### -First figure out how to deploy this:
 > - Separate hosting for FE & BE? - Y
 > - Netlify Y/N? Front End - Y
@@ -31,3 +26,6 @@
 >> - Confetti.js
 
 ### -Update UI with Socket.io? --Y
+
+### - Post-Deployment Items:
+> - Update & uncomment line 15 of index.html with url of front-end

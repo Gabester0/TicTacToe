@@ -72,7 +72,7 @@ function App(props) {
       if( match.length === 3 ){
         highlightWin(match, setLastWin, lastWin, player);
         delayFunction(1050, playAudio, "popAudio")
-        delayFunction(1150, setDelay, !delay)
+        delayFunction(1225, setDelay, !delay)
         return true
       }
     }
