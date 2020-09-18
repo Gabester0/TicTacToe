@@ -17,6 +17,11 @@ let redisClient = redis.createClient();
 
 //Set up Express to store game-state in redis cache via express-session
 //https://flaviocopes.com/express-sessions/#:~:text=That's%20what%20sessions%20are.,maintained%20by%20the%20Express%20team.&text=After%20this%20is%20done%2C%20all,routes%20are%20now%20using%20sessions.
+//To Start Redis: In File Explorer travel to Programs/redis/64bit and double click on redis-server.exe
+//OR
+// From server folder command line:
+// Enter `../../../../Programs/redis-2.4.5-win32-win64/64bit`
+// And Enter `redis-server`
 app.use(
    session({
       store: new RedisStore({client: redisClient}),
