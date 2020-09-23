@@ -41,7 +41,7 @@ function App(props) {
   }, [])
 
   useEffect(()=>{
-    socket.emit(`click`, {clicked: lastMove, player: player})
+    socket.emit(`click`, {clicked: lastMove, player: player, id: socket.id})
   }, [lastMove])
 
 

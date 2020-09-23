@@ -31,12 +31,16 @@ app.use(
 )
 
 io.on('connection', socket => { 
-    console.log(`Socket Connected`, socket.id)
-    socket.emit("message", {note: "I am your server"})
+   console.log(`Socket Connected`, socket.id)
+   socket.emit("message", {note: "I am your server"})
+   redisClient.set(socket.id, `Redis Connected with Socket ID: ${socket.id}`)
 
-    socket.on('click', socket=>{
-       console.log(socket)
-    })
+   socket.on('click', socket=>{
+      console.log(socket)
+      redisClient.get(socket.id, (err, value)=>{
+         console.log(value)
+      })
+   })
  });
 
 
