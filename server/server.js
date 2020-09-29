@@ -22,7 +22,7 @@ let redisClient = redis.createClient();
 // From server folder command line:
 // Enter `../../../../Programs/redis-2.4.5-win32-win64/64bit`
 // And Enter `redis-server`
-const { moduleTest } = require('./gameLogic/board');
+const { initiateBoard } = require('./gameLogic/board');
 
 app.use(
    session({
@@ -36,12 +36,14 @@ io.on('connection', socket => {
    console.log(`Socket Connected`, socket.id)
    socket.emit("message", {note: "I am your server"})
    
-   redisClient.set(socket.id, `Redis Connected with Socket ID: ${socket.id}`)
+   //hset sets a single hash value, hmset sets multiple values
+   redisClient.hmset(socket.id, "id", socket.id, "Test", "1,2,3" )
 
    socket.on('click', socket=>{
       console.log(socket)
-      redisClient.get(socket.id, (err, value)=>{
-         console.log(value)
+      //hmget is redis method to get multiple key values listed from hash: https://redis.io/commands/hmget
+      redisClient.hmget(socket.id, "id", "Test", (err, value)=>{
+         console.log(Array.from(value[1].split(',')))
       })
    })
  });
