@@ -15,13 +15,7 @@ const io = require('socket.io')(server, options);
 let RedisStore = require('connect-redis')(session);
 let redisClient = redis.createClient();
 
-//Set up Express to store game-state in redis cache via express-session
-//https://redislabs.com/solutions/use-cases/caching/
-//To Start Redis: In File Explorer travel to Programs/redis/64bit and double click on redis-server.exe
-//OR
-// From server folder command line:
-// Enter `../../../../Programs/redis-2.4.5-win32-win64/64bit`
-// And Enter `redis-server`
+
 const { initiateBoard } = require('./gameLogic/board');
 
 app.use(
