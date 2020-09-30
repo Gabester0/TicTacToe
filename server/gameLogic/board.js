@@ -2,11 +2,11 @@ const { solutions, emptyBoard } = require('./static')
 
 
 const initiateBoard = (redis, id)=>{
-    redis.hset(id, "board", emptyBoard)
+    for(let i = 0; i < 9; i++){
+        redis.hset(id, `board.${i}`, `null`)
+        console.log(`Set Hash Key board.${i} and Value null in Redis`)
+    }
 }
-//This isn't going to work
-//Board is an object
-//Will need to be a hash
-//Solutions will need to be a hash with each 3-integer array as a string?
 
-module.exports = initiateBoard;
+
+module.exports = {initiateBoard};

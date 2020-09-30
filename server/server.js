@@ -32,7 +32,7 @@ io.on('connection', socket => {
    
    //hset sets a single hash value, hmset sets multiple values
    redisClient.hmset(socket.id, "id", socket.id, "Test", "1,2,3" )
-
+   initiateBoard(redisClient, socket.id);
    socket.on('click', socket=>{
       console.log(socket)
       //hmget is redis method to get multiple key values listed from hash: https://redis.io/commands/hmget
