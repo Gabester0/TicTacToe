@@ -26,13 +26,15 @@ app.use(
    })
 )
 
-io.on('connection', socket => { 
+io.on('connection', (socket) => { 
    console.log(`Socket Connected`, socket.id)
    socket.emit("message", {note: "I am your server"})
    
    //hset sets a single hash value, hmset sets multiple values
-   redisClient.hmset(socket.id, "id", socket.id, "Test", "1,2,3" )
+   redisClient.hmset(socket.id, "id", socket.id)
    initiateBoard(redisClient, socket.id);
+   redisClient.hmget(socket.id, `game.player`, `moves.last`, (err, val)=> console.log(val))
+
    socket.on('click', socket=>{
       console.log(socket)
       //hmget is redis method to get multiple key values listed from hash: https://redis.io/commands/hmget

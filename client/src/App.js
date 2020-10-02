@@ -10,7 +10,7 @@ const clickAudio = require('./static/wood-click-1.wav');
 function App(props) {
   const [socket] = useSocket('http://localhost:5005/', {autoConnect: false});
   const [player, setPlayer] = useState("X");
-  const [board, setBoard] = useState( { ...Array(9).fill(null) } );
+  const [board, setBoard] = useState( { ...Array(9).fill(null) } ); //server
   const [lastMove, setlastMove] = useState();
   const [xmoves, setXMoves] = useState([]);
   const [omoves, setOMoves] = useState([]);
@@ -18,7 +18,7 @@ function App(props) {
   const [draw, setDraw] = useState(false);
   const [lastWin, setLastWin] = useState([]);
   const [delay, setDelay] = useState(false);
-  const solutions = [ [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6] ];
+  const solutions = [ [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6] ];  //server
 
   useEffect( ()=>{
     const win = checkWinner();
