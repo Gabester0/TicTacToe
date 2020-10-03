@@ -15,8 +15,9 @@ const io = require('socket.io')(server, options);
 let RedisStore = require('connect-redis')(session);
 let redisClient = redis.createClient();
 
-
+//Import custom functions
 const { initiateBoard } = require('./gameLogic/board');
+const { findGame, createGame } = require('./gameLogic/games');
 
 app.use(
    session({
@@ -31,9 +32,7 @@ io.on('connection', (socket) => {
    socket.emit("message", {note: "I am your server"})
 
    //Need a function to check redis for games looking for game with only 1 player
-   //Need a way to store 2 socket connections under 1 key that will identify both clients in 1 game
-        //Each client in the game needs to store the hashname and send it with server requests
-   //Can use redisClient.hgetall( hashname ) to get all values in a hash (see ln 47)
+   findGame(redisClient, socket.id)
    
    //hset sets a single hash value, hmset sets multiple values
    redisClient.hmset(socket.id, "id", socket.id)
