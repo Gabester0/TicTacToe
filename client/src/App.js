@@ -4,18 +4,21 @@ import ConfettiCannon from './components/ConfettiCannon';
 import { AppDiv, StaticDiv, StyledH5, Btn, Cannon } from './AppStyles';
 import { delayFunction } from './utility/utilities';
 import io from 'socket.io-client';
+import useSocket from 'use-socket.io-client';
 const clickAudio = require('./static/wood-click-1.wav');
 
 function App(props) {
+  const [socket] = useSocket('http://localhost:5005/', {autoConnect: false});
   const [player, setPlayer] = useState("X");
-  const [board, setBoard] = useState( { ...Array(9).fill(null) } );
+  const [board, setBoard] = useState( { ...Array(9).fill(null) } ); //server
+  const [lastMove, setlastMove] = useState();
   const [xmoves, setXMoves] = useState([]);
   const [omoves, setOMoves] = useState([]);
   const [winner, setWinner] = useState(false);
   const [draw, setDraw] = useState(false);
   const [lastWin, setLastWin] = useState([]);
   const [delay, setDelay] = useState(false);
-  const solutions = [ [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6] ];
+  const solutions = [ [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6] ];  //server
 
   useEffect( ()=>{
     const win = checkWinner();
@@ -26,8 +29,9 @@ function App(props) {
   }, [board, xmoves, omoves]);
 
   useEffect( ()=>{
-    const socket = io.connect('http://localhost:5005/');
-    console.log('Connecting Socket...')
+    socket.connect();
+    // socket = io.connect('http://localhost:5005/');
+    // console.log('Connecting Socket...')
     socket.on('connection', (socket)=>{
       console.log(`Socket Connected!`, socket.connected)
     })
@@ -35,6 +39,11 @@ function App(props) {
       console.log(`Server message: ${data.note}`)
     })
   }, [])
+
+  useEffect(()=>{
+    socket.emit(`click`, {clicked: lastMove, player: player, id: socket.id})
+  }, [lastMove])
+
 
   const playAudio = (id, volume)=>{
     const audio = document.getElementById(id);
@@ -45,6 +54,7 @@ function App(props) {
   const handleClick = (e)=>{
     const curr = parseInt(e.target.id);
     if(board[curr] === null && !winner){
+      setlastMove(curr);
       playAudio(`clickAudio`, .4);
       setBoard({
         ...board,
