@@ -31,6 +31,9 @@ io.on('connection', (socket) => {
    socket.emit("message", {note: "I am your server"})
 
    //Need a function to check redis for games looking for game with only 1 player
+   //Need a way to store 2 socket connections under 1 key that will identify both clients in 1 game
+        //Each client in the game needs to store the hashname and send it with server requests
+   //Can use redisClient.hgetall( hashname ) to get all values in a hash (see ln 47)
    
    //hset sets a single hash value, hmset sets multiple values
    redisClient.hmset(socket.id, "id", socket.id)
@@ -39,9 +42,10 @@ io.on('connection', (socket) => {
    socket.on('click', socket=>{
       console.log(socket)
       //hmget is redis method to get multiple key values listed from hash: https://redis.io/commands/hmget
-      redisClient.hmget(socket.id, "id", "Test", (err, value)=>{
-         console.log(Array.from(value[1].split(',')))
-      })
+    //   redisClient.hmget(socket.id, "id", "Test", (err, value)=>{
+    //      console.log(Array.from(value[1].split(',')))
+    //   })
+    // redisClient.hgetall(socket.id, (err, val)=> console.log(val))
    })
  });
 
