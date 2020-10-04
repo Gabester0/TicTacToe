@@ -5,6 +5,9 @@
  2. Navigate back to the server folder
  3. Enter `yarn run start` to start server
 
+ ## To clear redis-server
+from redis folder enter `redis-cli flushdb`.  To clear all redis databases `redis-cli flushall`
+
 Set up Express to store game-state in redis cache via express-session
 
 

@@ -4,10 +4,23 @@ const findGame = (redis, socketID)=>{
     redis.hgetall(`games`, (err, val)=>{
         if(err) return console.log(`There was a problem getting existing games`, err)
         //If value from hgetall(`games`) === null there are no games so we create a new game with gameNumber 1
-        if(val === null) createGame(redis, socketID, 1)
+        if(val === null) return createGame(redis, socketID, 1)
         //Logic to sort existing games here
+        //Get all games
 
-        redis.hgetall(`games`, (err, val)=> console.log(val))
+        redis.hgetall(`games`, (err, val)=>{
+            if(err) return console.log(`Error finding a game, please try again`)
+            //Get all keys returned and filter out 
+            const keys = Object.keys(val).filter( key=> key.split(`.`)[1] === `status`)
+            console.log(keys, ` From line 11 of findGame`)
+            keys.forEach(key=>{
+                //check if key status is false ? then add connecting player as second player and return
+                //Track game numbers as loop through in variable outside of forEach
+                redis.hmget(`games`, key, (err, val)=>{ console.log(val) })
+            })
+            //else call createGame and pass redis, socketID, variable with gameNumbers count + 1
+        })
+
 
         //First existing game with `${gameNumber}` === false add current player is a game with only 1 player
             //Need to make sure checking games in order of creation (I don't think redis hashes ensure creation order is maintained)
@@ -25,9 +38,8 @@ const createGame = (redis, socketID, gameNumber)=>{
     //games hash contains all existing games.  Each existing game will have:
     // key: gameNumber, value: Boolean (representing if game ready or not)
     // key: gamenumber.p1, value: socketID of this players connection
-    const p1Key = `${gameNumber}.p1`
-    redis.hmset(`games`, `${gameNumber}`, false, p1Key, socketID); // hmset() is command to set multiple values
-    redis.hgetall(gameNumber, (err, val)=> console.log(val))
+    redis.hmset(`games`, `${gameNumber}.status`, false, `${gameNumber}.p1`, socketID, `${gameNumber}.p2`, ``); // hmset() is command to set multiple values
+    redis.hmget(`games`, `${gameNumber}.status`, `${gameNumber}.p1`, `${gameNumber}.p2`, (err, val)=> console.log(`Game #${gameNumber} created: `, val))
 }
 
 
