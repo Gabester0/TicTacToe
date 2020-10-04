@@ -13,12 +13,28 @@ const findGame = (redis, socketID)=>{
             //Get all keys returned and filter out 
             const keys = Object.keys(val).filter( key=> key.split(`.`)[1] === `status`)
             console.log(keys, ` From line 11 of findGame`)
-            keys.forEach(key=>{
+            let newKey = 0;
+            keys.map( (key, i)=>{
                 //check if key status is false ? then add connecting player as second player and return
+                redis.hmget(`games`, key, (err, val)=>{ 
+                    if(err) return console.log(`Error getting current games value`)
+                    if(val[0] === `false`){
+                        console.log(key, val[0], i, socketID, ` Line 22`) 
+                        redis.hmset(`games`, key, true, `${i + 1}.p2`, socketID); // hmset() is command to set multiple values
+                        return redis.hmget(`games`, key, `${i + 1}.p1`, `${i + 1}.p2`, (err, val)=> console.log(val))
+                    }
+                })
                 //Track game numbers as loop through in variable outside of forEach
-                redis.hmget(`games`, key, (err, val)=>{ console.log(val) })
+                newKey = i + 2;
             })
             //else call createGame and pass redis, socketID, variable with gameNumbers count + 1
+            console.log(newKey)
+            createGame(redis, socketID, newKey);
+
+            //! PROBLEM !//
+            //When 1st 2 players connect simultaneously, 1st player triggers findGame which checks for existing game, finds none, line
+            //7 triggers createGame with game# 1.  Second player triggers findGame so quickly that the first game has not been set yet
+            //Second player finds nothing and also triggers createGame with game#1 (line 7) overwriting who is player 1 of game#1
         })
 
 
