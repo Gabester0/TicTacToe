@@ -1,5 +1,4 @@
 require(`dotenv`).config();
-
 const app = require('express')();
 const server = require('http').createServer(app);
 
@@ -15,6 +14,9 @@ const io = require('socket.io')(server, options);
 let RedisStore = require('connect-redis')(session);
 let redisClient = redis.createClient();
 
+const bluebird = require('bluebird');
+bluebird.promisifyAll(redis.RedisClient.prototype);
+
 //Import custom functions
 const { initiateBoard } = require('./gameLogic/board');
 const { findGame, createGame } = require('./gameLogic/games');
@@ -27,24 +29,33 @@ app.use(
    })
 )
 
-io.on('connection', (socket) => { 
+io.on('connection', async (socket) => { 
    console.log(`Socket Connected`, socket.id)
    socket.emit("message", {note: "I am your server"})
 
-   //Need a function to check redis for games looking for game with only 1 player
-   findGame(redisClient, socket.id)
-   
-   //hset sets a single hash value, hmset sets multiple values
-   redisClient.hmset(socket.id, "id", socket.id)
-   initiateBoard(redisClient, socket.id);
-   redisClient.hmget(socket.id, `game.player`, `moves.last`, (err, val)=> console.log(val))
+   const games = await redisClient.getAsync(`games`).then(res=> res );
+   if(games === null){ //Handle Creating First Game
+      await redisClient.setAsync('games', 1)
+      await redisClient.setAsync(`1.status`, false) //Set A Game status of false because only one player has joined
+      socket.emit("message", {game: 1, player: `X`}) //Communicate to first client Game number and player (X)
+   }else { //Handle adding second player, or creating additional games
+      const latestGame = games.split('')[games.length - 1]
+      const latestGameStatus = await redisClient.getAsync(`${latestGame}.status`)
+      if(latestGameStatus === `false`){ //Add Player to existing Game
+         await redisClient.setAsync(`${latestGame}.status`, true)
+         socket.emit("message", {game: latestGame, player: `O`}) //Communicate to second player Game number and player (O)
+      } else { //Handle creating new games after the first new game
+         const newGame = parseInt(latestGame) + 1
+         await redisClient.setAsync('games', `${games}${newGame}`)
+         await redisClient.setAsync(`${newGame}.status`, false) //Set A Game status of false because only one player has joined
+         socket.emit("message", {game: newGame, player: `X`}) //Communicate to first client Game number and player (X)
+      }
+
+   }
+
+   // initiateBoard(redisClient, socket.id);
    socket.on('click', socket=>{
       console.log(socket)
-      //hmget is redis method to get multiple key values listed from hash: https://redis.io/commands/hmget
-    //   redisClient.hmget(socket.id, "id", "Test", (err, value)=>{
-    //      console.log(Array.from(value[1].split(',')))
-    //   })
-    // redisClient.hgetall(socket.id, (err, val)=> console.log(val))
    })
  });
 
