@@ -28,6 +28,7 @@ function App(props) {
     if(xmoves.length +omoves.length >= 1) setPlayer( (player) => player === "X" ? "O" : "X")
   }, [board, xmoves, omoves]);
 
+  let gameSocket;
   useEffect( ()=>{
     socket.connect();
     // socket = io.connect('http://localhost:5005/');
@@ -37,6 +38,7 @@ function App(props) {
     })
     socket.on("message", (data)=>{
       console.log(`Server message: ${data.note}`)
+      console.log(data?.game, data?.player, data)
     })
   }, [])
 
