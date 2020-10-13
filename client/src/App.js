@@ -24,21 +24,17 @@ function App(props) {
     const win = checkWinner();
     if(win) return setWinner(true);
     if(xmoves.length + omoves.length === 9) return setDraw(true);
-    //Conditional logic keeps extra render from toggling player before first move
-    if(xmoves.length +omoves.length >= 1) setPlayer( (player) => player === "X" ? "O" : "X")
+    if(xmoves.length +omoves.length >= 1) setPlayer( (player) => player === "X" ? "O" : "X") //Conditional logic keeps extra render from toggling player before first move
   }, [board, xmoves, omoves]);
 
   let gameSocket;
   useEffect( ()=>{
-    socket.connect();
-    // socket = io.connect('http://localhost:5005/');
-    // console.log('Connecting Socket...')
+    socket.connect(); // socket = io.connect('http://localhost:5005/');
     socket.on('connection', (socket)=>{
       console.log(`Socket Connected!`, socket.connected)
     })
-    socket.on("message", (data)=>{
-      console.log(`Server message: ${data.note}`)
-      console.log(data?.game, data?.player, data)
+    socket.on("join", (data)=>{
+      console.log(`Server message: ${data.note}`, data.game, data.player, data.status)
     })
   }, [])
 
