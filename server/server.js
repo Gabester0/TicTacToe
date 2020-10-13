@@ -11,7 +11,7 @@ const io = require('socket.io')(server);  //const options = {  }; //{ perMessage
 const { redisClient, RedisStore } = require('./redis/redis');
 
 const { initiateBoard } = require('./gameLogic/board');
-const { findGame, createGame } = require('./gameLogic/games');
+const { findGame } = require('./gameLogic/games');
 
 app.use(
    session({
