@@ -22,14 +22,18 @@ app.use(
 
 io.on('connection', async (socket) => { 
    console.log(`Socket Connected`, socket.id)
-   socket.emit("message", {note: "I am your server"})
+   // socket.emit("message", {note: "I am your server"})
 
    const games = await redisClient.getAsync(`games`).then(res=> res );
    //Handle Creating First Game
    if(games === null){
       await redisClient.setAsync('games', 1)
       await redisClient.setAsync(`1.status`, false) //Set A Game status of false because only one player has joined
-      socket.emit("message", {game: 1, player: `X`}) //Communicate to first client Game number and player (X)
+      socket.join(`1`)
+      //Status is how the clients know if they are X or O, If a client gets this message (probably change the emit 
+      // event to one that is specific to joining) and the status IF false, client is player X, client stores this 
+      // information to local state, ELSE client stores to local state they are player O
+      io.to(`1`).emit("message", {game: 1, player: `X`, status: false, note: `This is game #${1} and player X has joined the game.  Waiting for a second player`}) //Communicate to first client Game number and player (X)
    //Handle adding second player, or creating additional games
    }else {
       const latestGame = games.split('')[games.length - 1]
@@ -37,13 +41,15 @@ io.on('connection', async (socket) => {
       //Add Player to existing Game
       if(latestGameStatus === `false`){
          await redisClient.setAsync(`${latestGame}.status`, true)
-         socket.emit("message", {game: latestGame, player: `O`}) //Communicate to second player Game number and player (O)
+         socket.join(`${latestGame}`)
+         io.to(`${latestGame}`).emit("message", {game: latestGame, player: `O`, status: true, note: `This is game #${latestGame} and player O has joined the game.  Ready to play`}) //Communicate to second player Game number and player (O)
       //Handle creating new games after the first new game
       } else {
          const newGame = parseInt(latestGame) + 1
          await redisClient.setAsync('games', `${games}${newGame}`)
          await redisClient.setAsync(`${newGame}.status`, false) //Set A Game status of false because only one player has joined
-         socket.emit("message", {game: newGame, player: `X`}) //Communicate to first client Game number and player (X)
+         socket.join(`${newGame}`)
+         io.to(`${newGame}`).emit("message", {game: newGame, player: `X`, status: false, note: `This is game #${newGame} and player X has joined the game.  Waiting for a second player`}) //Communicate to first client Game number and player (X)
       }
    }
 
