@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Board, { playAudio, highlightWin, resetHighlight } from './board/Board';
 import ConfettiCannon from './ConfettiCannon';
-import { AppDiv, StaticDiv, StyledH5, Btn, Cannon } from '../AppStyles';
+import { StaticDiv, StyledH5, Btn, Cannon } from '../AppStyles';
 import { delayFunction } from '../utility/utilities';
-// import io from 'socket.io-client';
-// import useSocket from 'use-socket.io-client';
 
 const LocalGame = (props)=> {
-    // const [socket] = useSocket('http://localhost:5005/', {autoConnect: false});
     const [player, setPlayer] = useState("X");
     const [board, setBoard] = useState( { ...Array(9).fill(null) } ); //server
     const [lastMove, setlastMove] = useState();
@@ -25,16 +22,6 @@ const LocalGame = (props)=> {
         if(xmoves.length + omoves.length === 9) return setDraw(true);
         if(xmoves.length +omoves.length >= 1) setPlayer( (player) => player === "X" ? "O" : "X") //Conditional logic keeps extra render from toggling player before first move
     }, [board, xmoves, omoves]);
-
-    // useEffect( ()=>{
-    //     socket.connect(); // socket = io.connect('http://localhost:5005/');
-    //     socket.on('connection', (socket)=> console.log(`Socket Connected!`, socket.connected) )
-    //     socket.on("join", ({note, game, player, status})=> console.log(`Server message: ${note}`, game, player, status) )
-    // }, [])
-
-    // useEffect(()=>{
-    //     socket.emit(`click`, {clicked: lastMove, player: player, id: socket.id})
-    // }, [lastMove])
 
     const handleClick = (e)=>{
         const curr = parseInt(e.target.id);
@@ -79,7 +66,6 @@ const LocalGame = (props)=> {
 
     return (
         <>
-            {/* <h1>Tic Tac Toe</h1> */}
             <StaticDiv>
                 <StyledH5 draw={draw} winner={winner} player={(player === "X")}>
                 {  draw ? `The game is a draw, please restart` : !winner ? `Current Player: ${player}` : `Player ${player} is the winner!`}
