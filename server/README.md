@@ -1,15 +1,14 @@
 ## To Start Server for Development
 
 1.  Start Redis Server:
-    > - From server folder `cd ../../../../Programs/redis-2.4.5-win32-win64/64bit`
-    > - And enter `redis-server`
-2.  Navigate back to the server folder
-3.  Open Ubuntu (WSL2)
-4.  Enter `sudo service redis-server restart` to ensure redis-server is running
-
-- Now enter `redis-cli` to open the redis CLI
-
-5.  Navigate to server folder and enter `yarn run start` to start server
+    > a) - From server folder `cd ../../../../Programs/redis-2.4.5-win32-win64/64bit`
+    > b) - And enter `redis-server`
+2.  Open new terminal window
+3.  Repeat step 1a
+4.  Enter `redis-cli` to open the redis CLI
+    > Now you can use `get KEY` to access any redis variables you set
+5.  Open new terminal window
+6.  Navigate to server folder and enter `yarn run start` to start server
 
 ## Redis-CLI commands
 
