@@ -26,9 +26,10 @@ io.on('connection', async (socket) => {
    console.log(`Socket Connected`, socket.id)
    // socket.emit("message", {note: "I am your server"})
 
-   findGame(socket, io)
+   const {game, status} = await findGame(socket, io)
+   console.log(game, status)
+   if(status) initiateBoard(game)
 
-   // initiateBoard(redisClient, socket.id);
    socket.on('click', socket=>{
       console.log(socket)
    })

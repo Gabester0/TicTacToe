@@ -1,20 +1,25 @@
+const { redisClient } = require('../redis/redis');
 const { solutions, emptyBoard } = require('./static')
 
 
-const initiateBoard = (redis, id)=>{
-    for(let i = 0; i < 9; i++){
-        redis.hset(id, `board.${i}`, `null`)
-        console.log(`Set Hash Key board.${i} and Value null in Redis`)
-    }
-    redis.hmset(id, 
-        `game.player`,`x`,
-        `game.winner`, false,
-        `game.draw`, false,
-        `game.lastWin`, ``,
-        `moves.last`, 1,
-        `moves.x`, ``,
-        `moves.o`, ``
-    );
+const initiateBoard = async(game)=>{
+
+    const board = JSON.stringify(emptyBoard)
+    await redisClient.setAsync(`${game}.board`, board)
+
+    // for(let i = 0; i < 9; i++){
+    //     redis.hset(id, `board.${i}`, `null`)
+    //     console.log(`Set Hash Key board.${i} and Value null in Redis`)
+    // }
+    // redis.hmset(id, 
+    //     `game.player`,`x`,
+    //     `game.winner`, false,
+    //     `game.draw`, false,
+    //     `game.lastWin`, ``,
+    //     `moves.last`, 1,
+    //     `moves.x`, ``,
+    //     `moves.o`, ``
+    // );
 }
 
 //cHANGE BOARD TO A SINGLE STRING OF COMMA SEPARATED VALUES?
