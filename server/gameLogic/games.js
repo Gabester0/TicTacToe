@@ -29,8 +29,8 @@ const findGame = async (socket, io)=>{
 
       if(latestGameStatus === `false`){    //Add Player to existing Game
 
-         await redisClient.setAsync(`${latestGame}.status`, true)
          socket.join(`${latestGame}`)
+         await redisClient.setAsync(`${latestGame}.status`, true)
          io.to(`${latestGame}`).emit("join", {game: latestGame, player: `O`, status: true, note: `This is game #${latestGame} and player O has joined the game.  Ready to play`}) //Communicate to second player Game number and player (O)
          return { game: latestGame, status: true }
 

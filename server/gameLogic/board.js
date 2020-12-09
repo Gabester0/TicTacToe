@@ -13,6 +13,17 @@ const initiateBoard = async(game)=>{
     await redisClient.setAsync(`${game}.oMoves`, JSON.stringify([]))
     //     `game.lastWin`, ``, ????
     // await redisClient.setAsync(`${game}.lastWin`, ``)
+
+    // Return everything, Every event emitted will update client data
+    return {
+      board: emptyBoard,
+      player: `x`,
+      winner: false,
+      draw: false,
+      lastMove: null,
+      xMoves: [],
+      oMoves: []
+    }
 }
 
 const resetBoard = async(game)=>{
@@ -28,6 +39,16 @@ const resetBoard = async(game)=>{
   //     `game.lastWin`, ``, ????
   // await redisClient.setAsync(`${game}.lastWin`, ``)
 
+  // Return everything, Every event emitted will update client data
+  return {
+    board: emptyBoard,
+    player: `x`,
+    winner: false,
+    draw: false,
+    lastMove: null,
+    xMoves: [],
+    oMoves: []
+  }
 }
 
 // Store as objects and convert with JSON.stringify before storing in redis and JSON.parse after getting from redis
