@@ -5,7 +5,7 @@ const { solutions, emptyBoard } = require('./static')
 const initiateBoard = async(game)=>{
     const board = JSON.stringify(emptyBoard)
     await redisClient.setAsync(`${game}.board`, board)
-    await redisClient.setAsync(`${game}.player`, `x`)
+    await redisClient.setAsync(`${game}.player`, `X`)
     await redisClient.setAsync(`${game}.winner`, false)
     await redisClient.setAsync(`${game}.draw`, false)
     await redisClient.setAsync(`${game}.lastMove`, 1)
@@ -17,7 +17,7 @@ const initiateBoard = async(game)=>{
     // Return everything, Every event emitted will update client data
     return {
       board: emptyBoard,
-      player: `x`,
+      player: `X`,
       winner: false,
       draw: false,
       lastMove: null,
@@ -30,7 +30,7 @@ const resetBoard = async(game)=>{
   // If both players select to play again switch and have O go first
   const board = JSON.stringify(emptyBoard)
   await redisClient.setAsync(`${game}.board`, board)
-  await redisClient.setAsync(`${game}.player`, `o`)
+  await redisClient.setAsync(`${game}.player`, `O`)
   await redisClient.setAsync(`${game}.winner`, false)
   await redisClient.setAsync(`${game}.draw`, false)
   await redisClient.setAsync(`${game}.lastMove`, 1)
@@ -42,7 +42,7 @@ const resetBoard = async(game)=>{
   // Return everything, Every event emitted will update client data
   return {
     board: emptyBoard,
-    player: `x`,
+    player: `O`,
     winner: false,
     draw: false,
     lastMove: null,

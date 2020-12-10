@@ -12,9 +12,10 @@ const RandomGame = (props)=>{
     const [ connected, setConnected ] = useState(false)
     const [ ready, setReady ] = useState(false);
     const [ board, setBoard ] = useState( { ...Array(9).fill(null) } ); //server
-    const [ player, setPlayer ] = useState()
-    const [xmoves, setXMoves] = useState([]);
-    const [omoves, setOMoves] = useState([]);
+    const [ player, setPlayer ] = useState(``)
+    const [ lastMove, setLastMove ] =  useState(null)
+    const [xMoves, setXMoves] = useState([]);
+    const [oMoves, setOMoves] = useState([]);
     const [winner, setWinner] = useState(false);
     const [draw, setDraw] = useState(false);
     const [delay, setDelay] = useState(false);
@@ -41,9 +42,16 @@ xMoves: []
         })
 
         socket.on("start", (initialGame)=>{
-            console.log(initialGame)
+            // console.log(initialGame)
             //We want an undefined board and all the other variables
             //When this arrives we will update state with everything and thus initialize play
+            setBoard(initialGame.board)
+            setLastMove(initialGame.lastMove)
+            setOMoves(initialGame.oMoves)
+            setXMoves(initialGame.xMoves)
+            setPlayer(initialGame.player)
+            setWinner(initialGame.winner)
+            setDraw(initialGame.draw)
         })
     }, [connected, setConnected, ready, setReady, socket, player, setPlayer])
 
