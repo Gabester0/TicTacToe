@@ -14,22 +14,22 @@ const RandomGame = (props)=>{
     const [ board, setBoard ] = useState( { ...Array(9).fill(null) } ); //server
     const [ player, setPlayer ] = useState(``)
     const [ lastMove, setLastMove ] =  useState(null)
-    const [xMoves, setXMoves] = useState([]);
-    const [oMoves, setOMoves] = useState([]);
-    const [winner, setWinner] = useState(false);
-    const [draw, setDraw] = useState(false);
-    const [delay, setDelay] = useState(false);
-/* 
-/ / Can I start with all state values undefined and then use 'start' event to update state?
-board: {0: null, 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null}
-draw: false
-game: "1"
-lastMove: null
-oMoves: []
-player: "x"
-winner: false
-xMoves: []
-*/
+    const [ xMoves, setXMoves ] = useState([]);
+    const [ oMoves, setOMoves ] = useState([]);
+    const [ winner, setWinner ] = useState(false);
+    const [ draw, setDraw ] = useState(false);
+    const [ delay, setDelay ] = useState(false);
+
+    const updateGameState = (gameState)=>{
+        setBoard(gameState.board)
+        setPlayer(gameState.player)
+        setLastMove(gameState.lastMove)
+        setXMoves(gameState.xMoves)
+        setOMoves(gameState.oMoves)
+        setWinner(gameState.winner)
+        setDraw(gameState.draw)
+    }
+
     useEffect( ()=>{
         socket.connect(); // socket = io.connect('http://localhost:5005/');
         socket.on('connection', (socket)=>{
@@ -42,26 +42,17 @@ xMoves: []
         })
 
         socket.on("start", (initialGame)=>{
-            // console.log(initialGame)
-            //We want an undefined board and all the other variables
-            //When this arrives we will update state with everything and thus initialize play
-            setBoard(initialGame.board)
-            setLastMove(initialGame.lastMove)
-            setOMoves(initialGame.oMoves)
-            setXMoves(initialGame.xMoves)
-            setPlayer(initialGame.player)
-            setWinner(initialGame.winner)
-            setDraw(initialGame.draw)
+            updateGameState(initialGame)
         })
     }, [connected, setConnected, ready, setReady, socket, player, setPlayer])
 
-
-    // useEffect(()=>{
-    //     socket.emit(`click`, {clicked: lastMove, player: player, id: socket.id})
-    // }, [lastMove])
-
     const handleClick = () =>{
-        console.log(`click`)
+        socket.emit(`click`, { board, player, lastMove, xMoves, oMoves, winner, draw })
+        // Still need to store which player is playing on client side
+        // Need to display that on the client side
+        // Need to disable the board when not one players turn
+        //Click will submit just the player and the square clicked
+        //Server will update gameState and emit to the room
     }
 
     const confettiAnchorRef = useRef();
