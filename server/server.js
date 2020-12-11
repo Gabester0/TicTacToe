@@ -8,6 +8,7 @@ const { redisClient, RedisStore } = require('./redis/redis');
 
 const { initiateBoard } = require('./gameLogic/board');
 const { findGame } = require('./gameLogic/findGame');
+const { handleClick, checkWinner } = require('./gameLogic/gamePlay');
 
 app.use(
    session({
@@ -28,8 +29,9 @@ io.on('connection', async (socket) => {
       io.to(game).emit(`start`, { game, ...initialGame } )
    }
 
-   socket.on('click', socket=>{
-      console.log(socket)
+   socket.on('click', ({ game, client, click })=>{
+      console.log(game, client, click)
+      handleClick(game, client, click)
       //Next step: Process clicks
       //    --Implement Server-side version of handleClick function from LocalGame.js (client)
       //    --Implement Server-side version of checkWinner function from LocalGame.js (client)

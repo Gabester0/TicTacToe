@@ -8,7 +8,7 @@ const initiateBoard = async(game)=>{
     await redisClient.setAsync(`${game}.player`, `X`)
     await redisClient.setAsync(`${game}.winner`, false)
     await redisClient.setAsync(`${game}.draw`, false)
-    await redisClient.setAsync(`${game}.lastMove`, 1)
+    await redisClient.setAsync(`${game}.lastMove`, ``)
     await redisClient.setAsync(`${game}.xMoves`, JSON.stringify([]))
     await redisClient.setAsync(`${game}.oMoves`, JSON.stringify([]))
     //     `game.lastWin`, ``, ????
@@ -16,6 +16,7 @@ const initiateBoard = async(game)=>{
 
     // Return everything, Every event emitted will update client data
     return {
+      game,
       board: emptyBoard,
       player: `X`,
       winner: false,

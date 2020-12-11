@@ -12,6 +12,7 @@ const RandomGame = (props)=>{
     const [ connected, setConnected ] = useState(false)
     const [ ready, setReady ] = useState(false);
     const [ client, setClient ] = useState(false);
+    const [ game, setGame ] = useState();
     const [ board, setBoard ] = useState( { ...Array(9).fill(null) } );
     const [ player, setPlayer ] = useState(``)
     const [ lastMove, setLastMove ] =  useState(null)
@@ -22,6 +23,7 @@ const RandomGame = (props)=>{
     const [ delay, setDelay ] = useState(false);
 
     const updateGameState = (gameState)=>{
+        setGame(gameState.game)
         setBoard(gameState.board)
         setPlayer(gameState.player)
         setLastMove(gameState.lastMove)
@@ -61,7 +63,7 @@ const RandomGame = (props)=>{
         if(client === player){
             playAudio(`clickAudio`, .4);
             console.log(e.target.id)
-            socket.emit(`click`, { client, click: e.target.id })
+            socket.emit(`click`, { game, client, click: e.target.id })
         }
         //Click will submit just the player and the square clicked
         //Server will update gameState and emit to the room
