@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import useSocket from 'use-socket.io-client';
 import Board, { playAudio, highlightWin, resetHighlight } from './board/Board';
 import ConfettiCannon from './ConfettiCannon';
-import { StaticDiv, StyledH5, Btn, Cannon } from '../AppStyles';
+import { StaticDiv, StyledH5One, StyledH5Two, Btn, Cannon } from '../AppStyles';
 import { delayFunction } from '../utility/utilities';
 
 const RandomGame = (props)=>{
@@ -11,7 +11,8 @@ const RandomGame = (props)=>{
 
     const [ connected, setConnected ] = useState(false)
     const [ ready, setReady ] = useState(false);
-    const [ board, setBoard ] = useState( { ...Array(9).fill(null) } ); //server
+    const [ client, setClient ] = useState(false);
+    const [ board, setBoard ] = useState( { ...Array(9).fill(null) } );
     const [ player, setPlayer ] = useState(``)
     const [ lastMove, setLastMove ] =  useState(null)
     const [ xMoves, setXMoves ] = useState([]);
@@ -37,31 +38,45 @@ const RandomGame = (props)=>{
             console.log(`Socket Connected!`, socket.connected)
         })
         socket.on("join", ({note, game, player, status})=>{
-            if(status) setReady(true)
+            
+            if(!status && !client) setClient(player)
+            if(status && !client) setClient(player)
+            
+            console.log("Client is Playing as:  ", player)
             console.log(`Server message: ${note}`, game, player, status)
         })
-
+        
         socket.on("start", (initialGame)=>{
+            setReady(true)
             updateGameState(initialGame)
+            console.log(`Game ready`)
         })
     }, [connected, setConnected, ready, setReady, socket, player, setPlayer])
 
-    const handleClick = () =>{
-        socket.emit(`click`, { board, player, lastMove, xMoves, oMoves, winner, draw })
-        // Still need to store which player is playing on client side
-        // Need to display that on the client side
-        // Need to disable the board when not one players turn
+    useEffect(()=>{
+        console.log(client)
+    }, [client, setClient])
+
+    const handleClick = (e) =>{
+        if(client === player){
+            playAudio(`clickAudio`, .4);
+            console.log(e.target.id)
+            socket.emit(`click`, { client, click: e.target.id })
+        }
         //Click will submit just the player and the square clicked
         //Server will update gameState and emit to the room
+
+        // Next step handle updating UI from accepted clicks
     }
 
     const confettiAnchorRef = useRef();
     return (
         <>
             <StaticDiv>
-                <StyledH5 >{/*draw={draw} winner={winner} player={(player === "X")} */}
-                {  draw ? `The game is a draw, please restart` : !winner ? `Current Player: ${player}` : `Player ${player} is the winner!`}
-                </StyledH5>
+                <StyledH5One>{`You are player ${client}`}</StyledH5One>
+                <StyledH5Two>
+                    { ready && (draw ? `The game is a draw, please restart` : !winner ? `Player ${player}'s turn` : `Player ${player} is the winner!`)}
+                </StyledH5Two>
             </StaticDiv>
             <Btn >Quit Game</Btn> {/*onClick={quitGame} */}
             <Btn onClick={props.menu} >Back to menu</Btn>

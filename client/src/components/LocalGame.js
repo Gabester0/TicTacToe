@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Board, { playAudio, highlightWin, resetHighlight } from './board/Board';
 import ConfettiCannon from './ConfettiCannon';
-import { StaticDiv, StyledH5, Btn, Cannon } from '../AppStyles';
+import { StaticDiv, StyledH5Two, Btn, Cannon } from '../AppStyles';
 import { delayFunction } from '../utility/utilities';
 
 const LocalGame = (props)=> {
@@ -26,13 +26,13 @@ const LocalGame = (props)=> {
     const handleClick = (e)=>{
         const curr = parseInt(e.target.id);
         if(board[curr] === null && !winner){
-        setlastMove(curr);
-        playAudio(`clickAudio`, .4);
-        setBoard({
-            ...board,
-            [curr]: player
-        })
-        player === "X" ? setXMoves ([...xmoves, curr]) : setOMoves([...omoves, curr]);
+            setlastMove(curr);
+            playAudio(`clickAudio`, .4);
+            setBoard({
+                ...board,
+                [curr]: player
+            })
+            player === "X" ? setXMoves ([...xmoves, curr]) : setOMoves([...omoves, curr]);
         }
     }
 
@@ -67,9 +67,9 @@ const LocalGame = (props)=> {
     return (
         <>
             <StaticDiv>
-                <StyledH5 draw={draw} winner={winner} player={(player === "X")}>
+                <StyledH5Two draw={draw} winner={winner} player={(player === "X")}>
                 {  draw ? `The game is a draw, please restart` : !winner ? `Current Player: ${player}` : `Player ${player} is the winner!`}
-                </StyledH5>
+                </StyledH5Two>
             </StaticDiv>
             <Btn onClick={resetBoard}>{ winner || draw ? `Play again` : `Reset game`}</Btn>
             <Btn onClick={props.menu}>Back to menu</Btn>

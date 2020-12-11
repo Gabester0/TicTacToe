@@ -14,8 +14,18 @@ export const StaticDiv = styled.div`
     justify-content: center;
 `;
 
-export const StyledH5 = styled.h5`
+export const StyledH5One = styled.h5`
     margin: 0;
+    font-size: ${ props => (props.winner || props.draw) ? "30px" : "20px" };
+    color: ${props=>
+        props.player ?
+            "#bd0000" :
+                "#4464AD"
+    };
+`;
+
+export const StyledH5Two = styled.h5`
+    margin: 0 20px;
     font-size: ${ props => (props.winner || props.draw) ? "30px" : "20px" };
     transition: all .4s;
     color: ${ props =>
@@ -24,8 +34,8 @@ export const StyledH5 = styled.h5`
                 props.player ?
                     "#bd0000" :
                         "#4464AD"
-    }
-    `;
+    };
+`;
 
 export const Btn = styled.button`
     color: #390040;

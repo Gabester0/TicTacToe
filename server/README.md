@@ -22,4 +22,6 @@
 - Currently each client instance generates an automatic socket connection
 - https://redislabs.com/solutions/use-cases/caching/
 
-Store data in redis as objects that I stringify? JSON.stringify?
+Store data in redis as objects as a string with JSON.stringify
+
+Before deployment comment out dotenv.config() (line 1) server.js
