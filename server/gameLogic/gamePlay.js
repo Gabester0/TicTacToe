@@ -1,4 +1,5 @@
 const { redisClient } = require('../redis/redis');
+const { solutions } = require('../gameLogic/static')
 
 const handleClick = async (game, client, click)=>{
     // Get board from Redis
@@ -39,22 +40,19 @@ const handleClick = async (game, client, click)=>{
     }
 }
 
-const checkWinner = async ()=>{
-
-/*    const checkWinner = () =>{
-        const currentMoves = (player === "X") ? xmoves : omoves;
-        if(currentMoves.length < 3) return false;
-        for(let i =  0; i < solutions.length; i++){
-            let match = currentMoves.filter((e)=> solutions[i].includes(e));
-            if( match.length === 3 ){
-                highlightWin(match, setLastWin, lastWin, player);
-                delayFunction(1050, playAudio, "popAudio")
-                delayFunction(1225, setDelay, !delay)
-                return true
-            }
+const checkWinner = async (currentMoves)=>{
+// currentMoves (xMoves or oMoves), 
+    if(currentMoves.length < 3) return false
+    for(let i =  0; i < solutions.length; i++){
+        let match = currentMoves.filter((e)=> solutions[i].includes(e));
+        if( match.length === 3 ){
+            // highlightWin(match, setLastWin, lastWin, player);
+            // delayFunction(1050, playAudio, "popAudio")
+            // delayFunction(1225, setDelay, !delay)
+            return true
         }
-        return false;
-    }*/
+    }
+    return false;
 }
                 
 module.exports = { handleClick, checkWinner }

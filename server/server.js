@@ -31,10 +31,12 @@ io.on('connection', async (socket) => {
 
    socket.on('click', ({ game, client, click })=>{
       console.log(game, client, click)
-      handleClick(game, client, click)
+      const { updatedBoard, currentMoves } = handleClick(game, client, click)
       //Next step: Process clicks
-      //    --Implement Server-side version of handleClick function from LocalGame.js (client)
+      ////    --Implement Server-side version of handleClick function from LocalGame.js (client)
       //    --Implement Server-side version of checkWinner function from LocalGame.js (client)
+      console.log(updatedBoard, currentMoves)
+      const winner = checkWinner(currentMoves)
    })
  });
 
