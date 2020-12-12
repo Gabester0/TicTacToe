@@ -8,7 +8,6 @@ import { delayFunction } from '../utility/utilities';
 
 const RandomGame = (props)=>{
     const [socket] = useSocket('http://localhost:5005/', {autoConnect: false});
-
     const [ connected, setConnected ] = useState(false)
     const [ ready, setReady ] = useState(false);
     const [ client, setClient ] = useState(false);
@@ -53,6 +52,13 @@ const RandomGame = (props)=>{
             updateGameState(initialGame)
             console.log(`Game ready`)
         })
+
+        socket.on(`click`, ({ board, player, winner, draw, lastMove, xMoves, oMoves })=>{
+            // Handle receiving emitted click from server
+            //board, player, winner, draw, lastMove, xMoves, oMoves
+            console.log(`Back from the server: `, board, player, winner, draw, lastMove, xMoves, oMoves)
+            //Now update client state
+        })
     }, [connected, setConnected, ready, setReady, socket, player, setPlayer])
 
     useEffect(()=>{
@@ -67,7 +73,7 @@ const RandomGame = (props)=>{
         }
         //Click will submit just the player and the square clicked
         //Server will update gameState and emit to the room
-
+        //Update Client State immediately and overwrite from server?  Test as is first and then possible implement if annoying lag
         // Next step handle updating UI from accepted clicks
     }
 

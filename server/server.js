@@ -29,14 +29,21 @@ io.on('connection', async (socket) => {
       io.to(game).emit(`start`, { game, ...initialGame } )
    }
 
-   socket.on('click', ({ game, client, click })=>{
-      console.log(game, client, click)
-      const { updatedBoard, currentMoves } = handleClick(game, client, click)
+   socket.on('click', async ({ game, client, click })=>{
+
+      const { board, xMoves, oMoves, lastMove, player, draw } = await handleClick(game, client, click)
+      // console.log(board, xMoves, oMoves, player, draw)
+      currentMoves = client === `X` ? xMoves : oMoves
+      const winner = await checkWinner(game, currentMoves)
+      console.log(winner)
+      io.to(game).emit(`click`, { game, board, player, winner, draw, lastMove, xMoves, oMoves })
+
       //Next step: Process clicks
       ////    --Implement Server-side version of handleClick function from LocalGame.js (client)
-      //    --Implement Server-side version of checkWinner function from LocalGame.js (client)
-      console.log(updatedBoard, currentMoves)
-      const winner = checkWinner(currentMoves)
+      ////    --Implement Server-side version of checkWinner function from LocalGame.js (client)
+      //       Need logic to emit to room updated board, etc. (basically all game data) 
+      //       game, board, player, winner, draw, lastMove, xMoves, oMoves
+      //       Current player is now changed on server, need to update this on client side
    })
  });
 

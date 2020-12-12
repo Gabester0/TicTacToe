@@ -15,7 +15,7 @@ const handleClick = async (game, client, click)=>{
     const oMovesJSON = await redisClient.getAsync(`${game}.oMoves`)
     const oMoves = JSON.parse(oMovesJSON)
 
-    //Add a check to see if xMoves and oMoves are off by more than 1, if so return, else the rest of the function
+    //Add a check to see if xMoves and oMoves are off by more than 1, if so return, else complete the function
 
     if(xMoves.length === oMoves.length){
         const curr = parseInt(click);
@@ -24,23 +24,31 @@ const handleClick = async (game, client, click)=>{
             const updatedBoard = { ...board, [curr]: client }
             const updatedBoardJSON = JSON.stringify(updatedBoard)
             await redisClient.setAsync(`${game}.board`, updatedBoardJSON)
+            
+            // Update player
+            const player = client === `X` ? `O` : `X`;
+            await redisClient.setAsync(`${game}.player`, player)
+
+            // Update draw
+            const draw = oMoves + xMoves === 9;
+            if(draw) await redisClient.setAsync(`${game}.draw`, draw)
 
             if(client === "X"){
                 const updatedXMoves = [...xMoves, curr]
                 const updatedXMovesJSON = JSON.stringify(updatedXMoves)
                 await redisClient.setAsync(`${game}.xMoves`, updatedXMovesJSON)
-                return { updatedBoard, updatedXMoves }
+                return { board: updatedBoard, xMoves: updatedXMoves, oMoves, lastMove: curr, player, draw }
             } else {
                 const updatedOMoves = [...oMoves, curr]
                 const updatedOMovesJSON = JSON.stringify(updatedOMoves)
                 await redisClient.setAsync(`${game}.oMoves`, updatedOMovesJSON)
-                return { updatedBoard, updatedOMoves }
+                return { board: updatedBoard, xMoves, oMoves: updatedOMoves, lastMove: curr, player, draw }
             }
         }
     }
 }
 
-const checkWinner = async (currentMoves)=>{
+const checkWinner = async (game, currentMoves)=>{
 // currentMoves (xMoves or oMoves), 
     if(currentMoves.length < 3) return false
     for(let i =  0; i < solutions.length; i++){
@@ -49,6 +57,7 @@ const checkWinner = async (currentMoves)=>{
             // highlightWin(match, setLastWin, lastWin, player);
             // delayFunction(1050, playAudio, "popAudio")
             // delayFunction(1225, setDelay, !delay)
+            await redisClient.setAsync(`${game}.winner`, true)
             return true
         }
     }
