@@ -8,7 +8,7 @@ const { redisClient, RedisStore } = require('./redis/redis');
 
 const { initiateBoard } = require('./gameLogic/board');
 const { findGame } = require('./gameLogic/findGame');
-const { handleClick, checkWinner } = require('./gameLogic/gamePlay');
+const { handleClick, checkWinner, changeTurn } = require('./gameLogic/gamePlay');
 
 app.use(
    session({
@@ -31,19 +31,19 @@ io.on('connection', async (socket) => {
 
    socket.on('click', async ({ game, client, click })=>{
 
-      const { board, xMoves, oMoves, lastMove, player, draw } = await handleClick(game, client, click)
-      // console.log(board, xMoves, oMoves, player, draw)
+      const { board, xMoves, oMoves, lastMove, draw } = await handleClick(game, client, click)
       currentMoves = client === `X` ? xMoves : oMoves
       const winner = await checkWinner(game, currentMoves)
-      console.log(winner)
-      io.to(game).emit(`click`, { game, board, player, winner, draw, lastMove, xMoves, oMoves })
+      if(winner) console.log(`The winner is ${client}!`)
 
-      //Next step: Process clicks
-      ////    --Implement Server-side version of handleClick function from LocalGame.js (client)
-      ////    --Implement Server-side version of checkWinner function from LocalGame.js (client)
-      //       Need logic to emit to room updated board, etc. (basically all game data) 
-      //       game, board, player, winner, draw, lastMove, xMoves, oMoves
-      //       Current player is now changed on server, need to update this on client side
+      if(winner || draw){
+         //? Make a gameEnd event to emit instead?
+         io.to(game).emit(`click`, { game, board, player: client, winner, draw, lastMove, xMoves, oMoves })
+      } else {
+         const newPlayer = await changeTurn(client, game)
+         io.to(game).emit(`click`, { game, board, player: newPlayer, winner, draw, lastMove, xMoves, oMoves })
+      }
+
    })
  });
 

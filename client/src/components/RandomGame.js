@@ -67,7 +67,7 @@ const RandomGame = (props)=>{
     }, [client, setClient])
 
     const handleClick = (e) =>{
-        if(client === player){
+        if(client === player && !winner && !draw){
             playAudio(`clickAudio`, .4);
             console.log(`Emitting click: `, { game, client, click: e.target.id })
             socket.emit(`click`, { game, client, click: e.target.id })
@@ -76,11 +76,11 @@ const RandomGame = (props)=>{
         ////Server will update gameState and emit to the room
         ////Update Client State immediately and overwrite from server?  Test as is first and then possible implement if annoying lag
         //// Next step handle updating UI from accepted clicks
-        // Wrong client is showing as winner, server error:
-            // in gamePlay.js player is changed in handleClick function
-            // Need to checkWinner before changing player
-            // Abstract changePlayer into its own function and call after checkWinner
-        // Need to ensure no clicks process on client board after a winner (  if(client === player && !winner))
+        //// Wrong client is showing as winner, server error:
+        ////     in gamePlay.js player is changed in handleClick function
+        ////     Need to checkWinner before changing player
+        ////     Abstract changePlayer into its own function and call after checkWinner
+        //// Need to ensure no clicks process on client board after a winner (  if(client === player && !winner))
         // Need to highlight win on receiving win from server 
         // Need to resetHighlight on reset
         // If one player quits after game need to queue up client for another game (reroute to main menu?)
