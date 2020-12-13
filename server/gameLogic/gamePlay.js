@@ -5,6 +5,7 @@ const handleClick = async (game, client, click)=>{
     // Get board from Redis
     const boardJSON = await redisClient.getAsync(`${game}.board`)
     const board = JSON.parse(boardJSON)
+    console.log(board)
     // Get winner from Redis
     const winnerJSON = await redisClient.getAsync(`${game}.winner`)
     const winner = JSON.parse(winnerJSON)
@@ -15,10 +16,12 @@ const handleClick = async (game, client, click)=>{
     const oMovesJSON = await redisClient.getAsync(`${game}.oMoves`)
     const oMoves = JSON.parse(oMovesJSON)
 
-    //Add a check to see if xMoves and oMoves are off by more than 1, if so return, else complete the function
-
-    if(xMoves.length === oMoves.length){
+    //Add a check to ensure current player has less than or equal to the number of moves of the other player
+    const currentPlayerMoves = client === `X` ? xMoves : oMoves;
+    const otherPlayerMoves =  client === `X` ? oMoves : xMoves
+    if(currentPlayerMoves.length <= otherPlayerMoves.length){
         const curr = parseInt(click);
+        console.log(`This is a dumb test`)
         if(board[curr] === null && !winner){
             await redisClient.setAsync(`${game}.lastMove`, curr)
             const updatedBoard = { ...board, [curr]: client }

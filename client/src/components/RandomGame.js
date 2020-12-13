@@ -53,11 +53,12 @@ const RandomGame = (props)=>{
             console.log(`Game ready`)
         })
 
-        socket.on(`click`, ({ board, player, winner, draw, lastMove, xMoves, oMoves })=>{
+        socket.on(`click`, async (gameState)=>{
             // Handle receiving emitted click from server
-            //board, player, winner, draw, lastMove, xMoves, oMoves
-            console.log(`Back from the server: `, board, player, winner, draw, lastMove, xMoves, oMoves)
+            //game, board, player, winner, draw, lastMove, xMoves, oMoves
+            console.log(`Back from the server: `, gameState )
             //Now update client state
+            await updateGameState(gameState)
         })
     }, [connected, setConnected, ready, setReady, socket, player, setPlayer])
 
@@ -68,13 +69,21 @@ const RandomGame = (props)=>{
     const handleClick = (e) =>{
         if(client === player){
             playAudio(`clickAudio`, .4);
-            console.log(e.target.id)
+            console.log(`Emitting click: `, { game, client, click: e.target.id })
             socket.emit(`click`, { game, client, click: e.target.id })
         }
-        //Click will submit just the player and the square clicked
-        //Server will update gameState and emit to the room
-        //Update Client State immediately and overwrite from server?  Test as is first and then possible implement if annoying lag
-        // Next step handle updating UI from accepted clicks
+        ////Click will submit just the player and the square clicked
+        ////Server will update gameState and emit to the room
+        ////Update Client State immediately and overwrite from server?  Test as is first and then possible implement if annoying lag
+        //// Next step handle updating UI from accepted clicks
+        // Wrong client is showing as winner, server error:
+            // in gamePlay.js player is changed in handleClick function
+            // Need to checkWinner before changing player
+            // Abstract changePlayer into its own function and call after checkWinner
+        // Need to ensure no clicks process on client board after a winner (  if(client === player && !winner))
+        // Need to highlight win on receiving win from server 
+        // Need to resetHighlight on reset
+        // If one player quits after game need to queue up client for another game (reroute to main menu?)
     }
 
     const confettiAnchorRef = useRef();
