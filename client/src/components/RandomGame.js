@@ -80,8 +80,9 @@ const RandomGame = (props)=>{
         //// Socket on(`clicked`) firing too many times, why?  Firing 3x, 4x, 5x, etc.,
         ////Socket code was set-up in useEffect that was re-running every time (connected, ready, socket, player) were updated
         ////Should only run once on page load
-        // Current player color is not toggling on player change, stays blue (O)
-        // highlightWin is not changing color either (stays blue: O)
+        //// Draw not registering
+        //// Current player color is not toggling on player change, stays blue (O)
+        //// highlightWin is not changing color either (stays blue: O)
         // Need to resetHighlight on click of Play Again
             //Play again will trigger a socket event to server, server will invite other player to play again
             // If accepted this will trigger server to call resetBoard() (from server/board.js)
@@ -93,8 +94,8 @@ const RandomGame = (props)=>{
     return (
         <>
             <StaticDiv>
-                <StyledH5One>{`You are player ${client}`}</StyledH5One>
-                <StyledH5Two>
+                <StyledH5One draw={draw} winner={winner} player={client}>{`You are player ${client}`}</StyledH5One>
+                <StyledH5Two draw={draw} winner={winner} player={(player === "X")}>
                     { ready && (draw ? `The game is a draw, please restart` : !winner ? `Player ${player}'s turn` : `Player ${player} is the winner!`)}
                 </StyledH5Two>
             </StaticDiv>
