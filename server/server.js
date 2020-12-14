@@ -25,16 +25,15 @@ io.on('connection', async (socket) => {
    console.log(game, status)
    if(status){
       const initialGame = await initiateBoard(game)
-
       io.to(game).emit(`start`, { game, ...initialGame } )
    }
 
    socket.on('click', async ({ game, client, click })=>{
       const allClients = io.sockets.adapter.rooms[game].sockets
       console.log("received a click", " All Clients: ", allClients)
-      const { board, xMoves, oMoves, lastMove, draw } = await handleClick(game, client, click)
+      const { board, xMoves, oMoves, lastMove } = await handleClick(game, client, click)
       currentMoves = client === `X` ? xMoves : oMoves
-      const { winner, match } = await checkWinner(game, currentMoves)
+      const { winner, match, draw } = await checkWinner(game, currentMoves, xMoves, oMoves)
       if(winner) console.log(`The winner is ${client}!  With the winning moves:`, match)
 
       if(winner || draw){
