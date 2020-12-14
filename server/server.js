@@ -33,12 +33,14 @@ io.on('connection', async (socket) => {
 
       const { board, xMoves, oMoves, lastMove, draw } = await handleClick(game, client, click)
       currentMoves = client === `X` ? xMoves : oMoves
-      const winner = await checkWinner(game, currentMoves)
+      const { winner, match } = await checkWinner(game, currentMoves)
       if(winner) console.log(`The winner is ${client}!`)
 
+      //? This is firing too many times, why?
+      //? Fires 3x, 4x, 5x, etc.
       if(winner || draw){
          //? Make a gameEnd event to emit instead?
-         io.to(game).emit(`click`, { game, board, player: client, winner, draw, lastMove, xMoves, oMoves })
+         io.to(game).emit(`gameOver`, { game, board, player: client, winner, draw, lastMove, xMoves, oMoves, match })
       } else {
          const newPlayer = await changeTurn(client, game)
          io.to(game).emit(`click`, { game, board, player: newPlayer, winner, draw, lastMove, xMoves, oMoves })

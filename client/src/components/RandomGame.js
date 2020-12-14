@@ -20,6 +20,8 @@ const RandomGame = (props)=>{
     const [ winner, setWinner ] = useState(false);
     const [ draw, setDraw ] = useState(false);
     const [ delay, setDelay ] = useState(false);
+    const [ match, setMatch ] = useState([]);
+    const [ lastWin, setLastWin ] = useState([]);
 
     const updateGameState = (gameState)=>{
         setGame(gameState.game)
@@ -55,16 +57,25 @@ const RandomGame = (props)=>{
 
         socket.on(`click`, async (gameState)=>{
             // Handle receiving emitted click from server
-            //game, board, player, winner, draw, lastMove, xMoves, oMoves
             console.log(`Back from the server: `, gameState )
-            //Now update client state
             await updateGameState(gameState)
+            
+        })
+
+        socket.on(`gameOver`, async(gameState)=>{
+            await updateGameState(gameState)
+            setMatch([gameState.match])
         })
     }, [connected, setConnected, ready, setReady, socket, player, setPlayer])
 
     useEffect(()=>{
-        console.log(client)
-    }, [client, setClient])
+        if(winner){
+            //We need the winning moves from server
+            highlightWin(match, setLastWin, lastWin, player);
+            delayFunction(1050, playAudio, "popAudio")
+            delayFunction(1225, setDelay, !delay)
+        }
+    }, [winner, setWinner])
 
     const handleClick = (e) =>{
         if(client === player && !winner && !draw){
@@ -81,6 +92,7 @@ const RandomGame = (props)=>{
         ////     Need to checkWinner before changing player
         ////     Abstract changePlayer into its own function and call after checkWinner
         //// Need to ensure no clicks process on client board after a winner (  if(client === player && !winner))
+        //// Trigger ConfettiCannon on win
         // Need to highlight win on receiving win from server 
         // Need to resetHighlight on reset
         // If one player quits after game need to queue up client for another game (reroute to main menu?)
@@ -100,17 +112,17 @@ const RandomGame = (props)=>{
             <h2>{!ready && `Waiting for second player`}</h2>
             {ready && <Board handleClick={handleClick} board={board} />}
             <Cannon
-                show={false} //winner
+                show={winner}
                 src={require('../static/StubbyCannon.png')} 
                 alt="confetti canon"
                 ref={confettiAnchorRef} />
-{/* CONFETTI CANNON */}
-            {/* {winner && delay && (
+        {/* CONFETTI CANNON */}
+            {winner && delay && (
                 <ConfettiCannon 
                     anchorRef={confettiAnchorRef}
                     dotCount={50}
                     colors={['red', 'green', 'blue', 'yellow']} />
-            )} */}
+            )}
         </>
     );
 }

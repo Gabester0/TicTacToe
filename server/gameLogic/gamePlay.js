@@ -52,11 +52,8 @@ const checkWinner = async (game, currentMoves)=>{
     for(let i =  0; i < solutions.length; i++){
         let match = currentMoves.filter((e)=> solutions[i].includes(e));
         if( match.length === 3 ){
-            // highlightWin(match, setLastWin, lastWin, player);
-            // delayFunction(1050, playAudio, "popAudio")
-            // delayFunction(1225, setDelay, !delay)
             await redisClient.setAsync(`${game}.winner`, true)
-            return true
+            return { winner: true, match}
         }
     }
     return false;
