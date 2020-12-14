@@ -56,7 +56,7 @@ const checkWinner = async (game, currentMoves)=>{
             return { winner: true, match}
         }
     }
-    return false;
+    return {winner: false, match: []};
 }
 
 const changeTurn = async (client, game)=>{
