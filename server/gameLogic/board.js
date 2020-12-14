@@ -1,27 +1,62 @@
+const { redisClient } = require('../redis/redis');
 const { solutions, emptyBoard } = require('./static')
 
 
-const initiateBoard = (redis, id)=>{
-    for(let i = 0; i < 9; i++){
-        redis.hset(id, `board.${i}`, `null`)
-        console.log(`Set Hash Key board.${i} and Value null in Redis`)
+const initiateBoard = async(game)=>{
+    const board = JSON.stringify(emptyBoard)
+    await redisClient.setAsync(`${game}.board`, board)
+    await redisClient.setAsync(`${game}.player`, `X`)
+    await redisClient.setAsync(`${game}.winner`, false)
+    await redisClient.setAsync(`${game}.draw`, false)
+    await redisClient.setAsync(`${game}.lastMove`, ``)
+    await redisClient.setAsync(`${game}.xMoves`, JSON.stringify([]))
+    await redisClient.setAsync(`${game}.oMoves`, JSON.stringify([]))
+    //     `game.lastWin`, ``, ????
+    // await redisClient.setAsync(`${game}.lastWin`, ``)
+
+    // Return everything, Every event emitted will update client data
+    return {
+      game,
+      board: emptyBoard,
+      player: `X`,
+      winner: false,
+      draw: false,
+      lastMove: null,
+      xMoves: [],
+      oMoves: []
     }
-    redis.hmset(id, 
-        `game.player`,`x`,
-        `game.winner`, false,
-        `game.draw`, false,
-        `game.lastWin`, ``,
-        `moves.last`, 1,
-        `moves.x`, ``,
-        `moves.o`, ``
-    );
 }
 
-//cHANGE BOARD TO A SINGLE STRING OF COMMA SEPARATED VALUES?
+const resetBoard = async(game)=>{
+  // If both players select to play again switch and have O go first
+  const board = JSON.stringify(emptyBoard)
+  await redisClient.setAsync(`${game}.board`, board)
+  await redisClient.setAsync(`${game}.player`, `O`)
+  await redisClient.setAsync(`${game}.winner`, false)
+  await redisClient.setAsync(`${game}.draw`, false)
+  await redisClient.setAsync(`${game}.lastMove`, 1)
+  await redisClient.setAsync(`${game}.xMoves`, JSON.stringify([]))
+  await redisClient.setAsync(`${game}.oMoves`, JSON.stringify([]))
+  //     `game.lastWin`, ``, ????
+  // await redisClient.setAsync(`${game}.lastWin`, ``)
+
+  // Return everything, Every event emitted will update client data
+  return {
+    board: emptyBoard,
+    player: `O`,
+    winner: false,
+    draw: false,
+    lastMove: null,
+    xMoves: [],
+    oMoves: []
+  }
+}
+
+// Store as objects and convert with JSON.stringify before storing in redis and JSON.parse after getting from redis
 /*
 CLIENT STATE:       CLIENT DATA TYPE    REDIS HASH KEY:             REDIS DATA TYPE
 board               Object(String val)  `board.0`, `board.1`, etc.  String
-player              String(`x`||`o`)    `game.player`               String(`x`||`o`)
+player              String(`x`||`o`)    `game.player`               String(`x`||`o`) (initial `x`)
 winner              Boolean             `game.winner`               Boolean
 draw                Boolean             `game.draw`                 Boolean
 lastWin             Array               `game.lastWin`              String(comma separated values)
@@ -29,4 +64,4 @@ lastMove            Integer(Board key)  `moves.last`                String(integ
 xmoves              Array               `moves.x`                   String(comma separated values)
 omoves              Array               `moves.o`                   String(comma separated values)
   */
-module.exports = {initiateBoard};
+module.exports = { initiateBoard, resetBoard };

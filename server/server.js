@@ -1,16 +1,14 @@
 require(`dotenv`).config();
 const app = require('express')();
 const server = require('http').createServer(app);
-const redis = require('redis');
+
 const session = require('express-session');
 const io = require('socket.io')(server);  //const options = {  }; //{ perMessageDeflate: false }
-let RedisStore = require('connect-redis')(session);
-let redisClient = redis.createClient();
-const bluebird = require('bluebird'); //Import Bluebird to make redis get/set-Async calls promises
-bluebird.promisifyAll(redis.RedisClient.prototype);
+const { redisClient, RedisStore } = require('./redis/redis');
 
 const { initiateBoard } = require('./gameLogic/board');
-const { findGame, createGame } = require('./gameLogic/games');
+const { findGame } = require('./gameLogic/findGame');
+const { handleClick, checkWinner, changeTurn } = require('./gameLogic/gamePlay');
 
 app.use(
    session({
@@ -22,34 +20,32 @@ app.use(
 
 io.on('connection', async (socket) => { 
    console.log(`Socket Connected`, socket.id)
-   socket.emit("message", {note: "I am your server"})
 
-   const games = await redisClient.getAsync(`games`).then(res=> res );
-   //Handle Creating First Game
-   if(games === null){
-      await redisClient.setAsync('games', 1)
-      await redisClient.setAsync(`1.status`, false) //Set A Game status of false because only one player has joined
-      socket.emit("message", {game: 1, player: `X`}) //Communicate to first client Game number and player (X)
-   //Handle adding second player, or creating additional games
-   }else {
-      const latestGame = games.split('')[games.length - 1]
-      const latestGameStatus = await redisClient.getAsync(`${latestGame}.status`)
-      //Add Player to existing Game
-      if(latestGameStatus === `false`){
-         await redisClient.setAsync(`${latestGame}.status`, true)
-         socket.emit("message", {game: latestGame, player: `O`}) //Communicate to second player Game number and player (O)
-      //Handle creating new games after the first new game
-      } else {
-         const newGame = parseInt(latestGame) + 1
-         await redisClient.setAsync('games', `${games}${newGame}`)
-         await redisClient.setAsync(`${newGame}.status`, false) //Set A Game status of false because only one player has joined
-         socket.emit("message", {game: newGame, player: `X`}) //Communicate to first client Game number and player (X)
-      }
+   const { game, status } = await findGame(socket, io)
+   console.log(game, status)
+   if(status){
+      const initialGame = await initiateBoard(game)
+
+      io.to(game).emit(`start`, { game, ...initialGame } )
    }
 
-   // initiateBoard(redisClient, socket.id);
-   socket.on('click', socket=>{
-      console.log(socket)
+   socket.on('click', async ({ game, client, click })=>{
+
+      const { board, xMoves, oMoves, lastMove, draw } = await handleClick(game, client, click)
+      currentMoves = client === `X` ? xMoves : oMoves
+      const { winner, match } = await checkWinner(game, currentMoves)
+      if(winner) console.log(`The winner is ${client}!`)
+
+      //? This is firing too many times, why?
+      //? Fires 3x, 4x, 5x, etc.
+      if(winner || draw){
+         //? Make a gameEnd event to emit instead?
+         io.to(game).emit(`gameOver`, { game, board, player: client, winner, draw, lastMove, xMoves, oMoves, match })
+      } else {
+         const newPlayer = await changeTurn(client, game)
+         io.to(game).emit(`click`, { game, board, player: newPlayer, winner, draw, lastMove, xMoves, oMoves })
+      }
+
    })
  });
 
