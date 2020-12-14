@@ -32,6 +32,7 @@ const RandomGame = (props)=>{
         setOMoves(gameState.oMoves)
         setWinner(gameState.winner)
         setDraw(gameState.draw)
+        setMatch(gameState.match)
     }
 
     useEffect( ()=>{
@@ -55,27 +56,20 @@ const RandomGame = (props)=>{
             console.log(`Game ready`)
         })
 
-        socket.on(`click`, async (gameState)=>{
+        socket.on(`clicked`, async (gameState)=>{
             // Handle receiving emitted click from server
             console.log(`Back from the server: `, gameState )
-            await updateGameState(gameState)
+            updateGameState(gameState)
             
         })
 
         socket.on(`gameOver`, async(gameState)=>{
-            await updateGameState(gameState)
-            setMatch([gameState.match])
-        })
-    }, [connected, setConnected, ready, setReady, socket, player, setPlayer])
-
-    useEffect(()=>{
-        if(winner){
-            //We need the winning moves from server
-            highlightWin(match, setLastWin, lastWin, player);
+            updateGameState(gameState)
+            highlightWin(gameState.match, setLastWin, lastWin, player);
             delayFunction(1050, playAudio, "popAudio")
             delayFunction(1225, setDelay, !delay)
-        }
-    }, [winner, setWinner])
+        })
+    }, [connected, setConnected, ready, setReady, socket, player, setPlayer])
 
     const handleClick = (e) =>{
         if(client === player && !winner && !draw){
@@ -83,18 +77,10 @@ const RandomGame = (props)=>{
             console.log(`Emitting click: `, { game, client, click: e.target.id })
             socket.emit(`click`, { game, client, click: e.target.id })
         }
-        ////Click will submit just the player and the square clicked
-        ////Server will update gameState and emit to the room
-        ////Update Client State immediately and overwrite from server?  Test as is first and then possible implement if annoying lag
-        //// Next step handle updating UI from accepted clicks
-        //// Wrong client is showing as winner, server error:
-        ////     in gamePlay.js player is changed in handleClick function
-        ////     Need to checkWinner before changing player
-        ////     Abstract changePlayer into its own function and call after checkWinner
-        //// Need to ensure no clicks process on client board after a winner (  if(client === player && !winner))
-        //// Trigger ConfettiCannon on win
-        // Need to highlight win on receiving win from server 
-        // Need to resetHighlight on reset
+        // Need to resetHighlight on click of Play Again
+            //Play again will trigger a socket event to server, server will invite other player to play again
+            // If accepted this will trigger server to call resetBoard() (from server/board.js)
+            // This will emit a reset to client which will reset client Boards
         // If one player quits after game need to queue up client for another game (reroute to main menu?)
     }
 
@@ -107,8 +93,8 @@ const RandomGame = (props)=>{
                     { ready && (draw ? `The game is a draw, please restart` : !winner ? `Player ${player}'s turn` : `Player ${player} is the winner!`)}
                 </StyledH5Two>
             </StaticDiv>
-            <Btn >Quit Game</Btn> {/*onClick={quitGame} */}
             <Btn onClick={props.menu} >Back to menu</Btn>
+            <Btn >Play Again</Btn>
             <h2>{!ready && `Waiting for second player`}</h2>
             {ready && <Board handleClick={handleClick} board={board} />}
             <Cannon

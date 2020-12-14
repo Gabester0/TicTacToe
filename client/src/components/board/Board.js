@@ -6,7 +6,11 @@ import clickAudio from '../../static/wood-click-1.wav';
 export const highlightWin = (array, setLastWin, lastWin, player)=>{
     setLastWin([...lastWin, array])
     const color = player === "X" ? "#bd0000" : "#4464AD";
-    array.map((e)=> document.getElementById(e).style.backgroundColor= color)
+    console.log(array, `Highlighting the win`);
+    array.map((e)=> {
+        console.log(e)
+        document.getElementById(e).style.backgroundColor= color
+    })
 }
 
 export const resetHighlight = (array) => {
