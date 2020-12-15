@@ -80,7 +80,7 @@ const RandomGame = (props)=>{
     }
 
     const handlePlayAgain = ()=>{
-        if(winner || draw) socket.emit(`initiatePlayAgain`, { game, client })
+        socket.emit(`initiatePlayAgain`, { game, client })
     }
     //// Socket on(`clicked`) firing too many times, why?  Firing 3x, 4x, 5x, etc.,
     ////Socket code was set-up in useEffect that was re-running every time (connected, ready, socket, player) were updated
@@ -101,11 +101,11 @@ const RandomGame = (props)=>{
             <StaticDiv>
                 <StyledH5One draw={draw} winner={winner} player={client}>{`You are player ${client}`}</StyledH5One>
                 <StyledH5Two draw={draw} winner={winner} player={(player === "X")}>
-                    { ready && (draw ? `The game is a draw, please restart` : !winner ? `Player ${player}'s turn` : `Player ${player} is the winner!`)}
+                    { ready && (draw ? `The game is a draw` : !winner ? `Player ${player}'s turn` : `Player ${player} is the winner!`)}
                 </StyledH5Two>
             </StaticDiv>
             <Btn onClick={props.menu} >Back to menu</Btn>
-            <Btn onClick={handlePlayAgain} >Play Again</Btn>
+            {(winner || draw) && <Btn onClick={handlePlayAgain} >Play Again</Btn>}
             <h2>{!ready && `Waiting for second player`}</h2>
             {ready && <Board handleClick={handleClick} board={board} />}
             <Cannon

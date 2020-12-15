@@ -46,6 +46,26 @@ io.on('connection', async (socket) => {
 
    socket.on(`initiatePlayAgain`, async({game, client})=>{
       console.log(`Player ${client} from ${game} game initiated play again.`)
+      //Set this clients playAgain status to true
+      await redisClient.setAsync(`${game}.${client}PlayAgain`, true)
+
+      //Check other clients playAgain status
+      const otherPlayer = client === `X` ? `O` : `X`;
+      const otherPlayerReady = await redisClient.getAsync(`${game}.${otherPlayer}PlayAgain`)
+
+      if(otherPlayerReady){
+         //call resetBoard
+      } else {
+         //emit to room invitation to playAgain
+// On client: store playAgain status
+// Show we are waiting for other player if player clicked playAgain
+
+// Or, if user clicks play again button, can we just leave room and findGame again?
+// Probably just as simple as calling socket.leave('room') and then calling findGame()
+// This way nobody has to wait for the other player and can just be dropped in next available game
+      }
+      // await redisClient.setAsync(`${game}.xPlayAgain`, false)
+      // await redisClient.setAsync(`${game}.oPlayAgain`, false)
       // io.to(game).emit(``)
       //How do I handle inviting the other player to play again?  Emit to just other player?
    })

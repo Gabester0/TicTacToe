@@ -1,3 +1,4 @@
+const redis = require('../redis/redis');
 const { redisClient } = require('../redis/redis');
 const { solutions, emptyBoard } = require('./static')
 
@@ -11,6 +12,8 @@ const initiateBoard = async(game)=>{
     await redisClient.setAsync(`${game}.lastMove`, ``)
     await redisClient.setAsync(`${game}.xMoves`, JSON.stringify([]))
     await redisClient.setAsync(`${game}.oMoves`, JSON.stringify([]))
+    await redisClient.setAsync(`${game}.xPlayAgain`, false)
+    await redisClient.setAsync(`${game}.oPlayAgain`, false)
     //     `game.lastWin`, ``, ????
     // await redisClient.setAsync(`${game}.lastWin`, ``)
 
@@ -37,6 +40,8 @@ const resetBoard = async(game)=>{
   await redisClient.setAsync(`${game}.lastMove`, 1)
   await redisClient.setAsync(`${game}.xMoves`, JSON.stringify([]))
   await redisClient.setAsync(`${game}.oMoves`, JSON.stringify([]))
+  await redisClient.setAsync(`${game}.xPlayAgain`, false)
+  await redisClient.setAsync(`${game}.oPlayAgain`, false)
   //     `game.lastWin`, ``, ????
   // await redisClient.setAsync(`${game}.lastWin`, ``)
 
