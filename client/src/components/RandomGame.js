@@ -80,6 +80,13 @@ const RandomGame = (props)=>{
     }
 
     const handlePlayAgain = ()=>{
+        setReady(false)
+        const resetGameState = {game: ``, board: { ...Array(9).fill(null) }, player: ``, lastMove: null, xMoves: [], oMoves: [], winner: false, draw: false, match: [] }
+        updateGameState(resetGameState)
+        setDelay(false)
+        setGame(``)
+        if(lastWin.length >= 1) resetHighlight(lastWin[lastWin.length - 1])
+        console.log(`Initiating another game`)
         socket.emit(`initiatePlayAgain`, { game, client })
     }
     //// Socket on(`clicked`) firing too many times, why?  Firing 3x, 4x, 5x, etc.,
@@ -88,11 +95,8 @@ const RandomGame = (props)=>{
     //// Draw not registering
     //// Current player color is not toggling on player change, stays blue (O)
     //// highlightWin is not changing color either (stays blue: O)
-    // Need to resetHighlight on click of Play Again
-        //// Play again will trigger client emitting a socket event to server
-        // server will invite other player to play again
-        // If accepted this will trigger server to call resetBoard() (from server/board.js)
-        // This will emit a reset to client which will reset client Boards
+    //// Need to resetHighlight on click of Play Again
+    //// Play again will trigger client emitting a socket event to server to trigger findGame again
     // If one player quits after game need to queue up client for another game (reroute to main menu?)
     
     const confettiAnchorRef = useRef();
