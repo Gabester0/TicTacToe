@@ -89,15 +89,9 @@ const RandomGame = (props)=>{
         console.log(`Initiating another game`)
         socket.emit(`initiatePlayAgain`, { game, client })
     }
-    //// Socket on(`clicked`) firing too many times, why?  Firing 3x, 4x, 5x, etc.,
-    ////Socket code was set-up in useEffect that was re-running every time (connected, ready, socket, player) were updated
-    ////Should only run once on page load
-    //// Draw not registering
-    //// Current player color is not toggling on player change, stays blue (O)
-    //// highlightWin is not changing color either (stays blue: O)
-    //// Need to resetHighlight on click of Play Again
-    //// Play again will trigger client emitting a socket event to server to trigger findGame again
     // If one player quits after game need to queue up client for another game (reroute to main menu?)
+    // Add button to enable/disable sound effects
+    // Handle losing UI
     
     const confettiAnchorRef = useRef();
     return (
