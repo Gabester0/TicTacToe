@@ -65,7 +65,7 @@ const RandomGame = (props)=>{
 
         socket.on(`gameOver`, async(gameState)=>{
             updateGameState(gameState)
-            highlightWin(gameState.match, setLastWin, lastWin, player);
+            highlightWin(gameState.match, setLastWin, lastWin, gameState.player);
             delayFunction(1050, playAudio, "popAudio")
             delayFunction(1225, setDelay, !delay)
         })
