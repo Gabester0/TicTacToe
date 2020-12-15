@@ -25,20 +25,17 @@ io.on('connection', async (socket) => {
    console.log(game, status)
    if(status){
       const initialGame = await initiateBoard(game)
-
       io.to(game).emit(`start`, { game, ...initialGame } )
    }
 
    socket.on('click', async ({ game, client, click })=>{
       const allClients = io.sockets.adapter.rooms[game].sockets
       console.log("received a click", " All Clients: ", allClients)
-      const { board, xMoves, oMoves, lastMove, draw } = await handleClick(game, client, click)
+      const { board, xMoves, oMoves, lastMove } = await handleClick(game, client, click)
       currentMoves = client === `X` ? xMoves : oMoves
-      const { winner, match } = await checkWinner(game, currentMoves)
+      const { winner, match, draw } = await checkWinner(game, currentMoves, xMoves, oMoves)
       if(winner) console.log(`The winner is ${client}!  With the winning moves:`, match)
 
-      //? This is firing too many times, why?
-      //? Fires 3x, 4x, 5x, etc.
       if(winner || draw){
          io.to(game).emit(`gameOver`, { game, board, player: client, winner, draw, lastMove, xMoves, oMoves, match })
       } else {
@@ -46,6 +43,17 @@ io.on('connection', async (socket) => {
          io.to(game).emit(`clicked`, { game, board, player: newPlayer, winner, draw, lastMove, xMoves, oMoves, match })
       }
    })
+
+   socket.on(`initiatePlayAgain`, async({currentGame, client})=>{
+      socket.leave(currentGame)
+      const { game, status } = await findGame(socket, io)
+      console.log(game, status)
+      if(status){
+         const initialGame = await initiateBoard(game)
+         io.to(game).emit(`start`, { game, ...initialGame } )
+      }
+   })
+   
  });
 
 

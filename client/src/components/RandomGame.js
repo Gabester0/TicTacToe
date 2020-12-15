@@ -65,11 +65,11 @@ const RandomGame = (props)=>{
 
         socket.on(`gameOver`, async(gameState)=>{
             updateGameState(gameState)
-            highlightWin(gameState.match, setLastWin, lastWin, player);
+            highlightWin(gameState.match, setLastWin, lastWin, gameState.player);
             delayFunction(1050, playAudio, "popAudio")
             delayFunction(1225, setDelay, !delay)
         })
-    }, [connected, setConnected, ready, setReady, socket, player, setPlayer])
+    }, [])
 
     const handleClick = (e) =>{
         if(client === player && !winner && !draw){
@@ -77,24 +77,39 @@ const RandomGame = (props)=>{
             console.log(`Emitting click: `, { game, client, click: e.target.id })
             socket.emit(`click`, { game, client, click: e.target.id })
         }
-        // Need to resetHighlight on click of Play Again
-            //Play again will trigger a socket event to server, server will invite other player to play again
-            // If accepted this will trigger server to call resetBoard() (from server/board.js)
-            // This will emit a reset to client which will reset client Boards
-        // If one player quits after game need to queue up client for another game (reroute to main menu?)
     }
 
+    const handlePlayAgain = ()=>{
+        setReady(false)
+        const resetGameState = {game: ``, board: { ...Array(9).fill(null) }, player: ``, lastMove: null, xMoves: [], oMoves: [], winner: false, draw: false, match: [] }
+        updateGameState(resetGameState)
+        setDelay(false)
+        setGame(``)
+        if(lastWin.length >= 1) resetHighlight(lastWin[lastWin.length - 1])
+        console.log(`Initiating another game`)
+        socket.emit(`initiatePlayAgain`, { game, client })
+    }
+    //// Socket on(`clicked`) firing too many times, why?  Firing 3x, 4x, 5x, etc.,
+    ////Socket code was set-up in useEffect that was re-running every time (connected, ready, socket, player) were updated
+    ////Should only run once on page load
+    //// Draw not registering
+    //// Current player color is not toggling on player change, stays blue (O)
+    //// highlightWin is not changing color either (stays blue: O)
+    //// Need to resetHighlight on click of Play Again
+    //// Play again will trigger client emitting a socket event to server to trigger findGame again
+    // If one player quits after game need to queue up client for another game (reroute to main menu?)
+    
     const confettiAnchorRef = useRef();
     return (
-        <>
+        <> 
             <StaticDiv>
-                <StyledH5One>{`You are player ${client}`}</StyledH5One>
-                <StyledH5Two>
-                    { ready && (draw ? `The game is a draw, please restart` : !winner ? `Player ${player}'s turn` : `Player ${player} is the winner!`)}
+                <StyledH5One draw={draw} winner={winner} player={client}>{`You are player ${client}`}</StyledH5One>
+                <StyledH5Two draw={draw} winner={winner} player={(player === "X")}>
+                    { ready && (draw ? `The game is a draw` : !winner ? `Player ${player}'s turn` : `Player ${player} is the winner!`)}
                 </StyledH5Two>
             </StaticDiv>
             <Btn onClick={props.menu} >Back to menu</Btn>
-            <Btn >Play Again</Btn>
+            {(winner || draw) && <Btn onClick={handlePlayAgain} >Play Again</Btn>}
             <h2>{!ready && `Waiting for second player`}</h2>
             {ready && <Board handleClick={handleClick} board={board} />}
             <Cannon

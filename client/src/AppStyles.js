@@ -16,9 +16,9 @@ export const StaticDiv = styled.div`
 
 export const StyledH5One = styled.h5`
     margin: 0;
-    font-size: ${ props => (props.winner || props.draw) ? "30px" : "20px" };
+    font-size: ${ props => (props.winner || props.draw) ? "24px" : "20px" };
     color: ${props=>
-        props.player ?
+        props.player === "X" ?
             "#bd0000" :
                 "#4464AD"
     };
@@ -26,7 +26,7 @@ export const StyledH5One = styled.h5`
 
 export const StyledH5Two = styled.h5`
     margin: 0 20px;
-    font-size: ${ props => (props.winner || props.draw) ? "30px" : "20px" };
+    font-size: ${ props => (props.winner || props.draw) ? "24px" : "20px" };
     transition: all .4s;
     color: ${ props =>
         props.draw ?

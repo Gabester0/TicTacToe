@@ -27,36 +27,40 @@ const handleClick = async (game, client, click)=>{
             const updatedBoardJSON = JSON.stringify(updatedBoard)
             await redisClient.setAsync(`${game}.board`, updatedBoardJSON)
 
-            // Update draw
-            const draw = oMoves + xMoves === 9;
-            if(draw) await redisClient.setAsync(`${game}.draw`, draw)
-
             if(client === "X"){
                 const updatedXMoves = [...xMoves, curr]
                 const updatedXMovesJSON = JSON.stringify(updatedXMoves)
                 await redisClient.setAsync(`${game}.xMoves`, updatedXMovesJSON)
-                return { board: updatedBoard, xMoves: updatedXMoves, oMoves, lastMove: curr, draw }
+                return { board: updatedBoard, xMoves: updatedXMoves, oMoves, lastMove: curr }
             } else {
                 const updatedOMoves = [...oMoves, curr]
                 const updatedOMovesJSON = JSON.stringify(updatedOMoves)
                 await redisClient.setAsync(`${game}.oMoves`, updatedOMovesJSON)
-                return { board: updatedBoard, xMoves, oMoves: updatedOMoves, lastMove: curr, draw }
+                return { board: updatedBoard, xMoves, oMoves: updatedOMoves, lastMove: curr }
             }
         }
     }
 }
 
-const checkWinner = async (game, currentMoves)=>{
-// currentMoves (xMoves or oMoves), 
-    if(currentMoves.length < 3) return false
-    for(let i =  0; i < solutions.length; i++){
-        let match = currentMoves.filter((e)=> solutions[i].includes(e));
-        if( match.length === 3 ){
-            await redisClient.setAsync(`${game}.winner`, true)
-            return { winner: true, match}
+const checkWinner = async (game, currentMoves, xMoves, oMoves)=>{
+    // Update draw
+    const draw = oMoves.length + xMoves.length === 9;
+    console.log(`Draw: `, draw)
+    if(draw){
+        await redisClient.setAsync(`${game}.draw`, draw)
+        return {winner: false, match: [], draw };
+    } else {
+        // currentMoves (xMoves or oMoves), 
+        if(currentMoves.length < 3) return false
+        for(let i =  0; i < solutions.length; i++){
+            let match = currentMoves.filter((e)=> solutions[i].includes(e));
+            if( match.length === 3 ){
+                await redisClient.setAsync(`${game}.winner`, true)
+                return { winner: true, match, draw }
+            }
         }
+        return {winner: false, match: [], draw };
     }
-    return {winner: false, match: []};
 }
 
 const changeTurn = async (client, game)=>{

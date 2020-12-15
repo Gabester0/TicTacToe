@@ -68,7 +68,7 @@ const LocalGame = (props)=> {
         <>
             <StaticDiv>
                 <StyledH5Two draw={draw} winner={winner} player={(player === "X")}>
-                {  draw ? `The game is a draw, please restart` : !winner ? `Current Player: ${player}` : `Player ${player} is the winner!`}
+                {  draw ? `The game is a draw` : !winner ? `Current Player: ${player}` : `Player ${player} is the winner!`}
                 </StyledH5Two>
             </StaticDiv>
             <Btn onClick={resetBoard}>{ winner || draw ? `Play again` : `Reset game`}</Btn>
