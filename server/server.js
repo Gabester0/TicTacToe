@@ -43,6 +43,12 @@ io.on('connection', async (socket) => {
          io.to(game).emit(`clicked`, { game, board, player: newPlayer, winner, draw, lastMove, xMoves, oMoves, match })
       }
    })
+
+   socket.on(`initiatePlayAgain`, async({game, client})=>{
+      console.log(`Player ${client} from ${game} game initiated play again.`)
+      // io.to(game).emit(``)
+      //How do I handle inviting the other player to play again?  Emit to just other player?
+   })
  });
 
 
