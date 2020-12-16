@@ -22,6 +22,7 @@ const RandomGame = (props)=>{
     const [ delay, setDelay ] = useState(false);
     const [ match, setMatch ] = useState([]);
     const [ lastWin, setLastWin ] = useState([]);
+    const [ quit, setQuit ] = useState(false);
 
     const updateGameState = (gameState)=>{
         setGame(gameState.game)
@@ -76,6 +77,8 @@ const RandomGame = (props)=>{
             console.log(`The other player has quit`)
             //? Handle communicating this to client and Triggering new game
             //Show 'The other player left the game' and the back to menu button?
+            setReady(false)
+            setQuit(true)
         })
 
         window.addEventListener('beforeunload', ()=> socket.emit(`quit`, {game: gameNumber}) )
@@ -97,6 +100,7 @@ const RandomGame = (props)=>{
 
     const handlePlayAgain = ()=>{
         setReady(false)
+        setQuit(false)
         const resetGameState = {game: ``, board: { ...Array(9).fill(null) }, player: ``, lastMove: null, xMoves: [], oMoves: [], winner: false, draw: false, match: [] }
         updateGameState(resetGameState)
         setDelay(false)
@@ -105,19 +109,9 @@ const RandomGame = (props)=>{
         console.log(`Initiating another game`)
         socket.emit(`initiatePlayAgain`, { game, client })
     }
-    // If player-X quits mid-game need to queue up player-O for another game (reroute to main menu?)
-    //      If player-X clicks back to menu and (!draw && !winner) emit quitGame event
-    //      Or if player-X closes window?  Can I listen for this?
-    //      Server removes player-X from room
-    //      Server notifies player-O client
-    //      Player-O client shows notification from server and routes player-O back to menu
     // Add button to enable/disable sound effects
     // Handle losing UI
 
-    // function quit(){
-    //     socket.emit(`quit`, { game, client })
-    // }
-    
     const confettiAnchorRef = useRef();
     return (
         <> 
@@ -128,8 +122,9 @@ const RandomGame = (props)=>{
                 </StyledH5Two>
             </StaticDiv>
             <Btn id="menu" onClick={props.menu} >Back to menu</Btn>
-            {(winner || draw) && <Btn onClick={handlePlayAgain} >Play Again</Btn>}
-            <h2>{!ready && `Waiting for second player`}</h2>
+            {(winner || draw || quit) && <Btn onClick={handlePlayAgain} >Play Again</Btn>}
+            <h2>{!ready && !quit && `Waiting for second player`}</h2>
+            <h2>{quit && `The other player left the game`}</h2>
             {ready && <Board handleClick={handleClick} board={board} />}
             <Cannon
                 show={winner}
