@@ -68,9 +68,11 @@ const RandomGame = (props)=>{
 
         socket.on(`gameOver`, async(gameState)=>{
             updateGameState(gameState)
-            highlightWin(gameState.match, setLastWin, lastWin, gameState.player);
-            delayFunction(1050, playAudio, "popAudio")
-            delayFunction(1225, setDelay, !delay)
+            if(gameState.winner){
+                highlightWin(gameState.match, setLastWin, lastWin, gameState.player);
+                delayFunction(1050, playAudio, "popAudio")
+                delayFunction(1225, setDelay, !delay)
+            }
         })
 
         socket.on(`quit`, ({game})=>{
@@ -109,6 +111,7 @@ const RandomGame = (props)=>{
         console.log(`Initiating another game`)
         socket.emit(`initiatePlayAgain`, { game, client })
     }
+    // playSound is called if a draw occurs
     // Add button to enable/disable sound effects
     // Handle losing UI
 
