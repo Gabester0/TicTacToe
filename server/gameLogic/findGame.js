@@ -1,14 +1,5 @@
 const { redisClient } = require('../redis/redis');
 
-// games hash map is just going to be game numbers with the value false when the first socket connects
-// and becoming true when the second connects.
-
-//If socket connects and createGame is called that connection is player 1/X
-//If socket connects and findGame finds a game that connection is player 2/O
-
-//Status is how the clients know if they are X or O:
-//    IF client gets this message and the status is false, client is player X, client stores this information to local state 
-//    ELSE client stores to local state they are player O
 let noGames = true;
 
 const findGame = async (socket, io)=>{

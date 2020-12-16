@@ -36,6 +36,7 @@ const RandomGame = (props)=>{
     }
 
     useEffect( ()=>{
+        let gameNumber = 0;
         socket.connect(); // socket = io.connect('http://localhost:5005/');
         socket.on('connection', (socket)=>{
             setConnected(true)
@@ -48,6 +49,7 @@ const RandomGame = (props)=>{
             
             console.log("Client is Playing as:  ", player)
             console.log(`Server message: ${note}`, game, player, status)
+            gameNumber = game
         })
         
         socket.on("start", (initialGame)=>{
@@ -69,6 +71,20 @@ const RandomGame = (props)=>{
             delayFunction(1050, playAudio, "popAudio")
             delayFunction(1225, setDelay, !delay)
         })
+
+        socket.on(`quit`, ({game})=>{
+            console.log(`The other player has quit`)
+            //? Handle communicating this to client and Triggering new game
+            //Show 'The other player left the game' and the back to menu button?
+        })
+
+        window.addEventListener('beforeunload', ()=> socket.emit(`quit`, {game: gameNumber}) )
+        document.getElementById('menu').addEventListener('click', ()=> socket.emit(`quit`, {game: gameNumber}) )
+        
+        return ()=>{
+            window.removeEventListener('beforeunload', ()=> socket.emit(`quit`, {game: gameNumber}) )
+            document.getElementById('menu').removeEventListener('click', ()=> socket.emit(`quit`, {game: gameNumber}) )
+        }
     }, [])
 
     const handleClick = (e) =>{
@@ -89,9 +105,18 @@ const RandomGame = (props)=>{
         console.log(`Initiating another game`)
         socket.emit(`initiatePlayAgain`, { game, client })
     }
-    // If one player quits after game need to queue up client for another game (reroute to main menu?)
+    // If player-X quits mid-game need to queue up player-O for another game (reroute to main menu?)
+    //      If player-X clicks back to menu and (!draw && !winner) emit quitGame event
+    //      Or if player-X closes window?  Can I listen for this?
+    //      Server removes player-X from room
+    //      Server notifies player-O client
+    //      Player-O client shows notification from server and routes player-O back to menu
     // Add button to enable/disable sound effects
     // Handle losing UI
+
+    // function quit(){
+    //     socket.emit(`quit`, { game, client })
+    // }
     
     const confettiAnchorRef = useRef();
     return (
@@ -102,7 +127,7 @@ const RandomGame = (props)=>{
                     { ready && (draw ? `The game is a draw` : !winner ? `Player ${player}'s turn` : `Player ${player} is the winner!`)}
                 </StyledH5Two>
             </StaticDiv>
-            <Btn onClick={props.menu} >Back to menu</Btn>
+            <Btn id="menu" onClick={props.menu} >Back to menu</Btn>
             {(winner || draw) && <Btn onClick={handlePlayAgain} >Play Again</Btn>}
             <h2>{!ready && `Waiting for second player`}</h2>
             {ready && <Board handleClick={handleClick} board={board} />}
