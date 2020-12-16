@@ -1,6 +1,5 @@
-const redis = require('../redis/redis');
 const { redisClient } = require('../redis/redis');
-const { solutions, emptyBoard } = require('./static')
+const { emptyBoard } = require('./static')
 
 
 const initiateBoard = async(game)=>{

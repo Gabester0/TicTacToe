@@ -22,6 +22,7 @@ const RandomGame = (props)=>{
     const [ delay, setDelay ] = useState(false);
     const [ match, setMatch ] = useState([]);
     const [ lastWin, setLastWin ] = useState([]);
+    const [ quit, setQuit ] = useState(false);
 
     const updateGameState = (gameState)=>{
         setGame(gameState.game)
@@ -36,6 +37,7 @@ const RandomGame = (props)=>{
     }
 
     useEffect( ()=>{
+        let gameNumber = 0;
         socket.connect(); // socket = io.connect('http://localhost:5005/');
         socket.on('connection', (socket)=>{
             setConnected(true)
@@ -48,6 +50,7 @@ const RandomGame = (props)=>{
             
             console.log("Client is Playing as:  ", player)
             console.log(`Server message: ${note}`, game, player, status)
+            gameNumber = game
         })
         
         socket.on("start", (initialGame)=>{
@@ -69,6 +72,22 @@ const RandomGame = (props)=>{
             delayFunction(1050, playAudio, "popAudio")
             delayFunction(1225, setDelay, !delay)
         })
+
+        socket.on(`quit`, ({game})=>{
+            console.log(`The other player has quit`)
+            //? Handle communicating this to client and Triggering new game
+            //Show 'The other player left the game' and the back to menu button?
+            setReady(false)
+            setQuit(true)
+        })
+
+        window.addEventListener('beforeunload', ()=> socket.emit(`quit`, {game: gameNumber}) )
+        document.getElementById('menu').addEventListener('click', ()=> socket.emit(`quit`, {game: gameNumber}) )
+        
+        return ()=>{
+            window.removeEventListener('beforeunload', ()=> socket.emit(`quit`, {game: gameNumber}) )
+            document.getElementById('menu').removeEventListener('click', ()=> socket.emit(`quit`, {game: gameNumber}) )
+        }
     }, [])
 
     const handleClick = (e) =>{
@@ -81,6 +100,7 @@ const RandomGame = (props)=>{
 
     const handlePlayAgain = ()=>{
         setReady(false)
+        setQuit(false)
         const resetGameState = {game: ``, board: { ...Array(9).fill(null) }, player: ``, lastMove: null, xMoves: [], oMoves: [], winner: false, draw: false, match: [] }
         updateGameState(resetGameState)
         setDelay(false)
@@ -89,16 +109,9 @@ const RandomGame = (props)=>{
         console.log(`Initiating another game`)
         socket.emit(`initiatePlayAgain`, { game, client })
     }
-    //// Socket on(`clicked`) firing too many times, why?  Firing 3x, 4x, 5x, etc.,
-    ////Socket code was set-up in useEffect that was re-running every time (connected, ready, socket, player) were updated
-    ////Should only run once on page load
-    //// Draw not registering
-    //// Current player color is not toggling on player change, stays blue (O)
-    //// highlightWin is not changing color either (stays blue: O)
-    //// Need to resetHighlight on click of Play Again
-    //// Play again will trigger client emitting a socket event to server to trigger findGame again
-    // If one player quits after game need to queue up client for another game (reroute to main menu?)
-    
+    // Add button to enable/disable sound effects
+    // Handle losing UI
+
     const confettiAnchorRef = useRef();
     return (
         <> 
@@ -108,9 +121,10 @@ const RandomGame = (props)=>{
                     { ready && (draw ? `The game is a draw` : !winner ? `Player ${player}'s turn` : `Player ${player} is the winner!`)}
                 </StyledH5Two>
             </StaticDiv>
-            <Btn onClick={props.menu} >Back to menu</Btn>
-            {(winner || draw) && <Btn onClick={handlePlayAgain} >Play Again</Btn>}
-            <h2>{!ready && `Waiting for second player`}</h2>
+            <Btn id="menu" onClick={props.menu} >Back to menu</Btn>
+            {(winner || draw || quit) && <Btn onClick={handlePlayAgain} >Play Again</Btn>}
+            <h2>{!ready && !quit && `Waiting for second player`}</h2>
+            <h2>{quit && `The other player left the game`}</h2>
             {ready && <Board handleClick={handleClick} board={board} />}
             <Cannon
                 show={winner}

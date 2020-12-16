@@ -53,6 +53,12 @@ io.on('connection', async (socket) => {
          io.to(game).emit(`start`, { game, ...initialGame } )
       }
    })
+
+   socket.on(`quit`,async ({ game })=>{
+      const winner = await redisClient.getAsync(`${game}.winner`)
+      const draw = await redisClient.getAsync(`${game}.draw`)
+      if(winner === 'false' && draw === 'false') socket.to(game).emit(`quit`, game)
+   })
    
  });
 
