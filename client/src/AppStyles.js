@@ -52,6 +52,12 @@ export const Btn = styled.button`
     }
 `;
 
+export const Sound = styled.img`
+    width: 14px;
+    height: 14px;
+    color: #390040;
+`;
+
 export const Cannon = styled.img`
     width: auto;
     height: 100px;
@@ -60,4 +66,5 @@ export const Cannon = styled.img`
     margin: 10px auto;
     color: #390040;
 `;
+
 // Color Scheme: #F0EFF4 #05A8AA #390040 #4464AD #E55934

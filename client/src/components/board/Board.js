@@ -18,6 +18,7 @@ export const resetHighlight = (array) => {
 }
 
 export const playAudio = (id, volume)=>{
+    console.log(`Playing Audio`)
     const audio = document.getElementById(id);
     if(volume !== undefined) audio.volume = volume;
     audio.play();

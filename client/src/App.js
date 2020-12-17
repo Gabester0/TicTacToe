@@ -25,6 +25,10 @@ function App() {
         />}
         { localGame && <LocalGame menu={showMenu} />}
         { randomGame && <RandomGame menu={showMenu} />}
+        <div>
+            <p>&#169; <a href="https://gabrieleipper.com" title="https://gabrieleipper.com">Gabriel Eipper</a> 2020</p>
+            <p>Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></p>
+        </div>
         </AppDiv>
     );
 }
