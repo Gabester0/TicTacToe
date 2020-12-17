@@ -18,7 +18,6 @@
 
 > - Find a different font? Or just introduce some more font-weight contrast between diff header sizes
 > - Make buttons more attractive
-> - Add a sound on/off button
 
 ### - Post-Deployment Items:
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppDiv } from './AppStyles';
+import { AppDiv, StyledH1 } from './AppStyles';
 import LocalGame from './components/LocalGame';
 import RandomGame from './components/RandomGame';
 import Menu from './components/menu/Menu';
@@ -18,7 +18,7 @@ function App() {
 
     return (
         <AppDiv>
-        <h1>Tic Tac Toe</h1>
+        <StyledH1>Tic Tac Toe</StyledH1>
         { !localGame && !randomGame && <Menu 
             localGame={chooseLocalGame}
             randomGame={chooseRandomGame}

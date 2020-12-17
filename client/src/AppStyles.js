@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const AppDiv = styled.div`
     text-align: center;
     color: #390040;
+    font-family: sans-serif;
 `;
 
 export const StaticDiv = styled.div`
@@ -12,6 +13,11 @@ export const StaticDiv = styled.div`
     display: flex;
     align-content: center;
     justify-content: center;
+`;
+
+export const StyledH1 = styled.h1`
+    font-weight: 100;
+    font-size: 2.5rem;
 `;
 
 export const StyledH5One = styled.h5`
@@ -41,8 +47,8 @@ export const Btn = styled.button`
     color: #390040;
     font-size: 16px;
     margin: auto 10px 20px 10px; 
-    border: 2px solid #390040;
-    border-radius: 8px;
+    border: 1px solid #390040;
+    border-radius: 6px;
     padding: 10px 20px;
     background-color: #F0EFF4;
     box-shadow: 0 0 0 1px white;
