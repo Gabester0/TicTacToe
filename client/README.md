@@ -14,12 +14,6 @@
 > - Firebase Y/N? Back End - Possibility
 > - Heroku Y/N? Back End - Possibility
 
-# Design goals
-
-> - Find a different font? Or just introduce some more font-weight contrast between diff header sizes
-> - Make buttons more attractive
-> - Add a sound on/off button
-
 ### - Post-Deployment Items:
 
 > - Update & uncomment line 15 of index.html with url of front-end

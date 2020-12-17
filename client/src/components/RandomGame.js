@@ -23,6 +23,7 @@ const RandomGame = (props)=>{
     const [ match, setMatch ] = useState([]);
     const [ lastWin, setLastWin ] = useState([]);
     const [ quit, setQuit ] = useState(false);
+    //Store users sound setting in sessionStorage
     const existingSound = sessionStorage.getItem('sound')
     const value = existingSound ? existingSound : true
     sessionStorage.setItem('sound', value)

@@ -11,3 +11,6 @@ export const Centered = styled.div`
     width: 300px;
     margin: 100px auto;
 `
+export const StyledH4 = styled.h4`
+    font-weight: bold;
+`;

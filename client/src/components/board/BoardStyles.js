@@ -7,7 +7,7 @@ export const BoardDiv = styled.div`
     display: grid;
     grid-template-columns: 150px 150px 150px;
     grid-template-rows: 150px 150px 150px;
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 4px;
 `;
 
