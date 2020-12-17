@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Board, { playAudio, highlightWin, resetHighlight } from './board/Board';
 import ConfettiCannon from './ConfettiCannon';
-import { StaticDiv, StyledH5Two, Btn, Cannon } from '../AppStyles';
+import { StaticDiv, StyledH5Two, Btn, Cannon, Sound } from '../AppStyles';
 import { delayFunction } from '../utility/utilities';
 
 const LocalGame = (props)=> {
@@ -15,6 +15,10 @@ const LocalGame = (props)=> {
     const [lastWin, setLastWin] = useState([]);
     const [delay, setDelay] = useState(false);
     const solutions = [ [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6] ];  //server
+    //Store users sound setting in sessionStorage
+    const existingSound = sessionStorage.getItem('sound')
+    const value = existingSound ? existingSound : true
+    sessionStorage.setItem('sound', value)
 
     useEffect( ()=>{
         const win = checkWinner();
@@ -27,7 +31,8 @@ const LocalGame = (props)=> {
         const curr = parseInt(e.target.id);
         if(board[curr] === null && !winner){
             setlastMove(curr);
-            playAudio(`clickAudio`, .4);
+            const sound = sessionStorage.getItem('sound');
+            if(sound === 'true') playAudio(`clickAudio`, .4);
             setBoard({
                 ...board,
                 [curr]: player
@@ -43,8 +48,11 @@ const LocalGame = (props)=> {
             let match = currentMoves.filter((e)=> solutions[i].includes(e));
             if( match.length === 3 ){
                 highlightWin(match, setLastWin, lastWin, player);
-                delayFunction(1050, playAudio, "popAudio")
                 delayFunction(1225, setDelay, !delay)
+                const sound = sessionStorage.getItem('sound')
+                if(sound === 'true'){
+                    delayFunction(1050, playAudio, "popAudio")
+                }
                 return true
             }
         }
@@ -62,6 +70,16 @@ const LocalGame = (props)=> {
         setDelay(false)
     }
 
+    const volumeSVG = require('../static/volume.svg');
+    const muteSVG = require('../static/mute.svg');
+
+    const toggleSound = ()=>{
+        const sound = sessionStorage.getItem('sound');
+        const newSound = sound === 'true' ? `false` : `true`;
+        sessionStorage.setItem('sound', newSound)
+        document.getElementById('soundSVG').src = newSound === 'true' ? volumeSVG : muteSVG
+    }
+
     const confettiAnchorRef = useRef();
 
     return (
@@ -73,6 +91,7 @@ const LocalGame = (props)=> {
             </StaticDiv>
             <Btn onClick={resetBoard}>{ winner || draw ? `Play again` : `Reset game`}</Btn>
             <Btn onClick={props.menu}>Back to menu</Btn>
+            <Btn id="sound" onClick={toggleSound}><Sound id="soundSVG" alt="sound" src={sessionStorage.getItem('sound') === 'true' ? volumeSVG : muteSVG}/></Btn>
             <Board handleClick={handleClick} board={board} />
             <Cannon
                 show={winner}
