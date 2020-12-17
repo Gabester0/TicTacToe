@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import useSocket from 'use-socket.io-client';
 import Board, { playAudio, highlightWin, resetHighlight } from './board/Board';
 import ConfettiCannon from './ConfettiCannon';
-import { StaticDiv, StyledH5One, StyledH5Two, Btn, Cannon } from '../AppStyles';
+import { StaticDiv, StyledH5One, StyledH5Two, Btn, Cannon, Sound } from '../AppStyles';
 import { delayFunction } from '../utility/utilities';
 
 const RandomGame = (props)=>{
@@ -23,6 +23,9 @@ const RandomGame = (props)=>{
     const [ match, setMatch ] = useState([]);
     const [ lastWin, setLastWin ] = useState([]);
     const [ quit, setQuit ] = useState(false);
+    const existingSound = sessionStorage.getItem('sound')
+    const value = existingSound ? existingSound : true
+    sessionStorage.setItem('sound', value)
 
     const updateGameState = (gameState)=>{
         setGame(gameState.game)
@@ -68,15 +71,18 @@ const RandomGame = (props)=>{
 
         socket.on(`gameOver`, async(gameState)=>{
             updateGameState(gameState)
-            highlightWin(gameState.match, setLastWin, lastWin, gameState.player);
-            delayFunction(1050, playAudio, "popAudio")
-            delayFunction(1225, setDelay, !delay)
+            if(gameState.winner){
+                highlightWin(gameState.match, setLastWin, lastWin, gameState.player);
+                delayFunction(1225, setDelay, true)
+                const sound = sessionStorage.getItem('sound')
+                if(sound === 'true'){
+                    delayFunction(1050, playAudio, "popAudio")
+                }
+            }
         })
 
         socket.on(`quit`, ({game})=>{
             console.log(`The other player has quit`)
-            //? Handle communicating this to client and Triggering new game
-            //Show 'The other player left the game' and the back to menu button?
             setReady(false)
             setQuit(true)
         })
@@ -92,7 +98,8 @@ const RandomGame = (props)=>{
 
     const handleClick = (e) =>{
         if(client === player && !winner && !draw){
-            playAudio(`clickAudio`, .4);
+            const sound = sessionStorage.getItem('sound');
+            if(sound === 'true') playAudio(`clickAudio`, .4);
             console.log(`Emitting click: `, { game, client, click: e.target.id })
             socket.emit(`click`, { game, client, click: e.target.id })
         }
@@ -109,8 +116,16 @@ const RandomGame = (props)=>{
         console.log(`Initiating another game`)
         socket.emit(`initiatePlayAgain`, { game, client })
     }
-    // Add button to enable/disable sound effects
-    // Handle losing UI
+
+    const volumeSVG = require('../static/volume.svg');
+    const muteSVG = require('../static/mute.svg');
+
+    const toggleSound = ()=>{
+        const sound = sessionStorage.getItem('sound');
+        const newSound = sound === 'true' ? `false` : `true`;
+        sessionStorage.setItem('sound', newSound)
+        document.getElementById('soundSVG').src = newSound === 'true' ? volumeSVG : muteSVG
+    }
 
     const confettiAnchorRef = useRef();
     return (
@@ -123,6 +138,7 @@ const RandomGame = (props)=>{
             </StaticDiv>
             <Btn id="menu" onClick={props.menu} >Back to menu</Btn>
             {(winner || draw || quit) && <Btn onClick={handlePlayAgain} >Play Again</Btn>}
+            <Btn id="sound" onClick={toggleSound}><Sound id="soundSVG" alt="sound" src={sessionStorage.getItem('sound') === 'true' ? volumeSVG : muteSVG}/></Btn>
             <h2>{!ready && !quit && `Waiting for second player`}</h2>
             <h2>{quit && `The other player left the game`}</h2>
             {ready && <Board handleClick={handleClick} board={board} />}
@@ -131,7 +147,6 @@ const RandomGame = (props)=>{
                 src={require('../static/StubbyCannon.png')} 
                 alt="confetti canon"
                 ref={confettiAnchorRef} />
-        {/* CONFETTI CANNON */}
             {winner && delay && (
                 <ConfettiCannon 
                     anchorRef={confettiAnchorRef}
