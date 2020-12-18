@@ -8,12 +8,21 @@
 
 # Remaining goals:
 
-### -First figure out how to deploy this:
+### - Final Items:
 
-> - Netlify Y/N? Front End - Y
-> - Firebase Y/N? Back End - Possibility
-> - Heroku Y/N? Back End - Possibility
+> - Create General Repo README
+> - Handle losing UI in RandomGame.js
+> - Different sound for losing player?
+> - Move LocalGame and RandomGame to src? Or a views or pages folder?
+> - Create of victory folder inside components for ConfettiCannon.js and confettiDot
 
-### - Post-Deployment Items:
+### - Pre-Deployment Items:
+
+##### - Client
 
 > - Update & uncomment line 15 of index.html with url of front-end
+> - Update line 10 of RandomGame.js with url of deployed server
+
+##### - Server
+
+> - Comment out line 1 of server.js pre-deployment

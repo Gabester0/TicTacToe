@@ -42,7 +42,7 @@ const RandomGame = (props)=>{
 
     useEffect( ()=>{
         let gameNumber = 0;
-        socket.connect(); // socket = io.connect('http://localhost:5005/');
+        socket.connect();
         socket.on('connection', (socket)=>{
             setConnected(true)
             console.log(`Socket Connected!`, socket.connected)
