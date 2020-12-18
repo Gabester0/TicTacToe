@@ -7,7 +7,7 @@ import { StaticDiv, StyledH5One, StyledH5Two, Btn, Cannon, Sound } from '../AppS
 import { delayFunction } from '../utility/utilities';
 
 const RandomGame = (props)=>{
-    const [socket] = useSocket('http://localhost:5005/', {autoConnect: false});
+    const [socket] = useSocket(process.env.REACT_APP_SERVER_URL, {autoConnect: false});
     const [ connected, setConnected ] = useState(false)
     const [ ready, setReady ] = useState(false);
     const [ client, setClient ] = useState(false);

@@ -8,7 +8,8 @@
 
 ## Run locally
 
-- Clone repository
-- If you cloned the main repository make sure you are in the client folder with `cd client`
-- Run `yarn` to install Node modules
-- Run `yarn run start` to start the client
+1.  Clone repository
+2.  Create a .env file inside the root client directory and add `REACT_APP_SERVER_URL='http://localhost:5005/'`
+3.  Make sure you are in the client folder with `cd client`
+4.  Run `yarn` to install Node modules
+5.  Run `yarn run start` to start the client

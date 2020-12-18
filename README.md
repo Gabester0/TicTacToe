@@ -35,6 +35,7 @@
 > - Different sound for losing player?
 > - Move LocalGame and RandomGame to src? Or a views or pages folder?
 > - Create of victory folder inside components for ConfettiCannon.js and confettiDot
+> - Game numbers need to be a comma separated string of numbers to handle multi-digit game numbers (currently only single digit is used so games can only go up to nine before code will break. Game number 10 will be read as game number 0)
 
 ### - Pre-Deployment Items:
 
@@ -42,6 +43,7 @@
 
 > - Update & uncomment line 15 of index.html with url of front-end
 > - Update line 10 of RandomGame.js with url of deployed server
+> - Updated line 3 of this README file with URL of deployed client
 
 ##### - Server
 
