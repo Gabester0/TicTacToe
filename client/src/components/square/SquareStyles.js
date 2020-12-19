@@ -6,4 +6,8 @@ export const SquareDiv = styled.div`
     border-radius: 4px;
     margin: 4px;
     background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 `

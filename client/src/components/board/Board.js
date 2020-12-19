@@ -29,7 +29,7 @@ const Board = (props)=>{
         <Square 
           id={i} 
           key={i} 
-          number={i + 1} 
+        //   number={i + 1} 
           value={props.board[i]} 
           click={props.handleClick}
         ></Square>
