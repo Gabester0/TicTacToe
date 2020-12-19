@@ -25,7 +25,7 @@ io.on('connection', async (socket) => {
    console.log(game, status)
    if(status){
       const initialGame = await initiateBoard(game)
-      io.to(game).emit(`start`, { game, ...initialGame } )
+      io.to(game).emit(`start`, initialGame)
    }
 
    socket.on('click', async ({ game, client, click })=>{
@@ -50,7 +50,7 @@ io.on('connection', async (socket) => {
       console.log(game, status)
       if(status){
          const initialGame = await initiateBoard(game)
-         io.to(game).emit(`start`, { game, ...initialGame } )
+         io.to(game).emit(`start`, initialGame)
       }
    })
 
