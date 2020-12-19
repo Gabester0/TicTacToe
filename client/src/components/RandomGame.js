@@ -23,6 +23,7 @@ const RandomGame = (props)=>{
     const [ match, setMatch ] = useState([]);
     const [ lastWin, setLastWin ] = useState([]);
     const [ quit, setQuit ] = useState(false);
+
     //Store users sound setting in sessionStorage
     const existingSound = sessionStorage.getItem('sound')
     const value = existingSound ? existingSound : true
@@ -42,6 +43,7 @@ const RandomGame = (props)=>{
 
     useEffect( ()=>{
         let gameNumber = 0;
+        let client = false;
         socket.connect();
         socket.on('connection', (socket)=>{
             setConnected(true)
@@ -55,6 +57,7 @@ const RandomGame = (props)=>{
             console.log("Client is Playing as:  ", player)
             console.log(`Server message: ${note}`, game, player, status)
             gameNumber = game
+            client = player
         })
         
         socket.on("start", (initialGame)=>{
@@ -67,17 +70,19 @@ const RandomGame = (props)=>{
             // Handle receiving emitted click from server
             console.log(`Back from the server: `, gameState )
             updateGameState(gameState)
-            
         })
 
         socket.on(`gameOver`, async(gameState)=>{
             updateGameState(gameState)
             if(gameState.winner){
                 highlightWin(gameState.match, setLastWin, lastWin, gameState.player);
-                delayFunction(1225, setDelay, true)
-                const sound = sessionStorage.getItem('sound')
-                if(sound === 'true'){
-                    delayFunction(1050, playAudio, "popAudio")
+                console.log(`Player: `, player, ` Latest player: `, gameState.player, ` Client: `, client)
+                if( gameState.player === client ){
+                    delayFunction(1225, setDelay, true)
+                    const sound = sessionStorage.getItem('sound')
+                    if(sound === 'true'){
+                        delayFunction(1050, playAudio, "popAudio")
+                    }
                 }
             }
         })
@@ -90,7 +95,7 @@ const RandomGame = (props)=>{
 
         window.addEventListener('beforeunload', ()=> socket.emit(`quit`, {game: gameNumber}) )
         document.getElementById('menu').addEventListener('click', ()=> socket.emit(`quit`, {game: gameNumber}) )
-        
+
         return ()=>{
             window.removeEventListener('beforeunload', ()=> socket.emit(`quit`, {game: gameNumber}) )
             document.getElementById('menu').removeEventListener('click', ()=> socket.emit(`quit`, {game: gameNumber}) )
@@ -130,7 +135,7 @@ const RandomGame = (props)=>{
 
     const confettiAnchorRef = useRef();
     return (
-        <> 
+        <>
             <StaticDiv>
                 <StyledH5One draw={draw} winner={winner} player={client}>{`You are player ${client}`}</StyledH5One>
                 <StyledH5Two draw={draw} winner={winner} player={(player === "X")}>
@@ -144,7 +149,7 @@ const RandomGame = (props)=>{
             <h2>{quit && `The other player left the game`}</h2>
             {ready && <Board handleClick={handleClick} board={board} />}
             <Cannon
-                show={winner}
+                show={ winner && player === client }
                 src={require('../static/StubbyCannon.png')} 
                 alt="confetti canon"
                 ref={confettiAnchorRef} />
