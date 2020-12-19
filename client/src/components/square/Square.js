@@ -5,7 +5,7 @@ const Square = (props)=>{
 
     return  (
         <SquareDiv className="square" id={props.id} onClick={props.click}>
-            <p>{props.number}</p>
+            {/* <p>{props.number}</p> */}
             <h1>{props.value}</h1>
         </SquareDiv>
     )
