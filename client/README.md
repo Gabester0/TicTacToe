@@ -1,19 +1,15 @@
-# [Tic Tac Toe Game](https://gabester0.github.io/TicTacToe/)
+# [Early Demo of Local Game](https://gabester0.github.io/TicTacToe/)
 
-#Built with:
+# Built with:
 
 - React
 - React-Spring
 - Styled Components
 
-# Remaining goals:
+## Run locally
 
-### -First figure out how to deploy this:
-
-> - Netlify Y/N? Front End - Y
-> - Firebase Y/N? Back End - Possibility
-> - Heroku Y/N? Back End - Possibility
-
-### - Post-Deployment Items:
-
-> - Update & uncomment line 15 of index.html with url of front-end
+1.  Clone repository
+2.  Create a .env file inside the root client directory and add `REACT_APP_SERVER_URL='http://localhost:5005/'`
+3.  Make sure you are in the client folder with `cd client`
+4.  Run `yarn` to install Node modules
+5.  Run `yarn run start` to start the client
