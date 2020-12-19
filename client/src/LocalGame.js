@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Board, { playAudio, highlightWin, resetHighlight } from './components/board/Board';
-import ConfettiCannon from './components/ConfettiCannon';
+import ConfettiCannon from './components/confettiCannon/ConfettiCannon';
 import { StaticDiv, StyledH5Two, Btn, Cannon, Sound } from './AppStyles';
 import { delayFunction } from './utility/utilities';
 

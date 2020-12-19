@@ -31,9 +31,6 @@
 
 ### - Final Items:
 
-> - Move LocalGame and RandomGame to src? Or a views or pages folder?
-> - Create a folder called Animation inside components for ConfettiCannon.js and confettiDot
-> - Game numbers need to be a comma separated string of numbers to handle multi-digit game numbers (currently only single digit is used so games can only go up to nine before code will break. Game number 10 will be read as game number 0)
 > - Change server to store game data as a single object that is stringified and change socket to emit this object
 
 ### - Pre-Deployment Items:
