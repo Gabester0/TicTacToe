@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Board, { playAudio, highlightWin, resetHighlight } from './board/Board';
-import ConfettiCannon from './ConfettiCannon';
-import { StaticDiv, StyledH5Two, Btn, Cannon, Sound } from '../AppStyles';
-import { delayFunction } from '../utility/utilities';
+import Board, { playAudio, highlightWin, resetHighlight } from './components/board/Board';
+import ConfettiCannon from './components/ConfettiCannon';
+import { StaticDiv, StyledH5Two, Btn, Cannon, Sound } from './AppStyles';
+import { delayFunction } from './utility/utilities';
 
 const LocalGame = (props)=> {
     const [player, setPlayer] = useState("X");
@@ -70,8 +70,8 @@ const LocalGame = (props)=> {
         setDelay(false)
     }
 
-    const volumeSVG = require('../static/volume.svg');
-    const muteSVG = require('../static/mute.svg');
+    const volumeSVG = require('./static/volume.svg');
+    const muteSVG = require('./static/mute.svg');
 
     const toggleSound = ()=>{
         const sound = sessionStorage.getItem('sound');
@@ -95,7 +95,7 @@ const LocalGame = (props)=> {
             <Board handleClick={handleClick} board={board} />
             <Cannon
                 show={winner}
-                src={require('../static/StubbyCannon.png')} 
+                src={require('./static/StubbyCannon.png')} 
                 alt="confetti canon"
                 ref={confettiAnchorRef} />
             {winner && delay && (

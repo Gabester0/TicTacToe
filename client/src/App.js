@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AppDiv, StyledH1 } from './AppStyles';
-import LocalGame from './components/LocalGame';
-import RandomGame from './components/RandomGame';
+import LocalGame from './LocalGame';
+import RandomGame from './RandomGame';
 import Menu from './components/menu/Menu';
 
 function App() {

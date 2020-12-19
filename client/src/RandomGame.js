@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
-import io from 'socket.io-client';
 import useSocket from 'use-socket.io-client';
-import Board, { playAudio, highlightWin, resetHighlight } from './board/Board';
-import ConfettiCannon from './ConfettiCannon';
-import { StaticDiv, StyledH5One, StyledH5Two, Btn, Cannon, Sound } from '../AppStyles';
-import { delayFunction } from '../utility/utilities';
+import Board, { playAudio, highlightWin, resetHighlight } from './components/board/Board';
+import ConfettiCannon from './components/ConfettiCannon';
+import { StaticDiv, StyledH5One, StyledH5Two, Btn, Cannon, Sound } from './AppStyles';
+import { delayFunction } from './utility/utilities';
 
 const RandomGame = (props)=>{
-    const [socket] = useSocket(process.env.REACT_APP_SERVER_URL, {autoConnect: false});
+    const [ socket ] = useSocket(process.env.REACT_APP_SERVER_URL, {autoConnect: false});
     const [ connected, setConnected ] = useState(false)
     const [ ready, setReady ] = useState(false);
     const [ client, setClient ] = useState(false);
@@ -42,22 +41,16 @@ const RandomGame = (props)=>{
     }
 
     useEffect( ()=>{
-        let gameNumber = 0;
-        let client = false;
         socket.connect();
         socket.on('connection', (socket)=>{
             setConnected(true)
             console.log(`Socket Connected!`, socket.connected)
         })
         socket.on("join", ({note, game, player, status})=>{
-            
             if(!status && !client) setClient(player)
             if(status && !client) setClient(player)
-            
             console.log("Client is Playing as:  ", player)
             console.log(`Server message: ${note}`, game, player, status)
-            gameNumber = game
-            client = player
         })
         
         socket.on("start", (initialGame)=>{
@@ -65,14 +58,17 @@ const RandomGame = (props)=>{
             updateGameState(initialGame)
             console.log(`Game ready`)
         })
+    }, [])
 
-        socket.on(`clicked`, async (gameState)=>{
+
+    useEffect(()=>{
+        socket.on(`clicked`, (gameState)=>{
             // Handle receiving emitted click from server
             console.log(`Back from the server: `, gameState )
             updateGameState(gameState)
         })
 
-        socket.on(`gameOver`, async(gameState)=>{
+        socket.on(`gameOver`, (gameState)=>{
             updateGameState(gameState)
             if(gameState.winner){
                 highlightWin(gameState.match, setLastWin, lastWin, gameState.player);
@@ -93,14 +89,15 @@ const RandomGame = (props)=>{
             setQuit(true)
         })
 
-        window.addEventListener('beforeunload', ()=> socket.emit(`quit`, {game: gameNumber}) )
-        document.getElementById('menu').addEventListener('click', ()=> socket.emit(`quit`, {game: gameNumber}) )
+        window.addEventListener('beforeunload', ()=> socket.emit(`quit`, {game}) )
+        document.getElementById('menu').addEventListener('click', ()=> socket.emit(`quit`, {game}) )
 
         return ()=>{
-            window.removeEventListener('beforeunload', ()=> socket.emit(`quit`, {game: gameNumber}) )
-            document.getElementById('menu').removeEventListener('click', ()=> socket.emit(`quit`, {game: gameNumber}) )
+            window.removeEventListener('beforeunload', ()=> socket.emit(`quit`, {game}) )
+            document.getElementById('menu').removeEventListener('click', ()=> socket.emit(`quit`, {game}) )
         }
-    }, [])
+
+    }, [game, setGame])
 
     const handleClick = (e) =>{
         if(client === player && !winner && !draw){
@@ -123,8 +120,8 @@ const RandomGame = (props)=>{
         socket.emit(`initiatePlayAgain`, { game, client })
     }
 
-    const volumeSVG = require('../static/volume.svg');
-    const muteSVG = require('../static/mute.svg');
+    const volumeSVG = require('./static/volume.svg');
+    const muteSVG = require('./static/mute.svg');
 
     const toggleSound = ()=>{
         const sound = sessionStorage.getItem('sound');
@@ -150,7 +147,7 @@ const RandomGame = (props)=>{
             {ready && <Board handleClick={handleClick} board={board} />}
             <Cannon
                 show={ winner && player === client }
-                src={require('../static/StubbyCannon.png')} 
+                src={require('./static/StubbyCannon.png')} 
                 alt="confetti canon"
                 ref={confettiAnchorRef} />
             {winner && delay && (
