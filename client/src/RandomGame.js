@@ -49,6 +49,7 @@ const RandomGame = (props)=>{
         socket.on("join", ({note, game, player, status})=>{
             if(!status && !client) setClient(player)
             if(status && !client) setClient(player)
+            setGame(game)
             console.log("Client is Playing as:  ", player)
             console.log(`Server message: ${note}`, game, player, status)
         })
@@ -89,14 +90,19 @@ const RandomGame = (props)=>{
             setQuit(true)
         })
 
-        window.addEventListener('beforeunload', ()=> socket.emit(`quit`, {game}) )
-        document.getElementById('menu').addEventListener('click', ()=> socket.emit(`quit`, {game}) )
+        //Ensures this only runs once when game value has been set
+        if(typeof game === `number`){
+            window.addEventListener('beforeunload', ()=> socket.emit(`quit`, {game}) )
+            document.getElementById('menu').addEventListener('click', ()=>{
+                console.log(`Emitting Quit`, { game })
+                socket.emit(`quit`, {game})
+            })
+        }
 
         return ()=>{
             window.removeEventListener('beforeunload', ()=> socket.emit(`quit`, {game}) )
             document.getElementById('menu').removeEventListener('click', ()=> socket.emit(`quit`, {game}) )
         }
-
     }, [game, setGame])
 
     const handleClick = (e) =>{
