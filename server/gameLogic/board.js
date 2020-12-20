@@ -3,16 +3,17 @@ const { emptyBoard } = require('./static')
 
 
 const initiateBoard = async(game)=>{
-  const gameStatus = {
+  const gameState = {
     game,
-    board: JSON.stringify(emptyBoard),
+    board: emptyBoard,
     player: `X`,
     winner: false,
     draw: false,
     lastMove: ``,
-    xMoves: JSON.stringify([]),
-    oMoves: JSON.stringify([]),
+    xMoves: [],
+    oMoves: [],
   }
+  const gameStateJSON = JSON.stringify(gameState)
     // await redisClient.setAsync(`${game}.board`, board)
     // await redisClient.setAsync(`${game}.player`, `X`)
     // await redisClient.setAsync(`${game}.winner`, false)
@@ -32,8 +33,8 @@ const initiateBoard = async(game)=>{
     //   xMoves: [],
     //   oMoves: []
     // }
-    await redisClient.setAsync(game, gameStatus)
-    return gameStatus
+    await redisClient.setAsync(game, gameStateJSON)
+    return gameState
 }
 
 module.exports = { initiateBoard };

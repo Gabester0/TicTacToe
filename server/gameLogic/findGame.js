@@ -21,10 +21,10 @@ const findGame = async (socket, io)=>{
       const latestGame = games[games.length - 1]
       const latestGameStateJSON = await redisClient.getAsync(`${latestGame}`)
       const latestGameState = JSON.parse(latestGameStateJSON)
+      console.log(`findGame.js line 24: ${latestGameState}`)
       // const latestGameStatus = latestGameState.status
 
-      if(latestGameState.status === `false`){    //Add Player to existing Game
-
+      if(latestGameState.status === false){    //Add Player to existing Game
          socket.join(`${latestGame}`)
          const updatedLatestGameState = { ...latestGameState, status: true}
          await redisClient.setAsync(`${latestGame}`, JSON.stringify(updatedLatestGameState))
