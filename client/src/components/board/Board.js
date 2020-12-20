@@ -7,14 +7,13 @@ export const highlightWin = (array, setLastWin, lastWin, player)=>{
     setLastWin([...lastWin, array])
     const color = player === "X" ? "#bd0000" : "#4464AD";
     console.log(array, `Highlighting the win`);
-    array.map((e)=> {
-        console.log(e)
+    array.forEach((e)=> {
         document.getElementById(e).style.backgroundColor= color
     })
 }
 
 export const resetHighlight = (array) => {
-    array.map((e)=> document.getElementById(e).style.backgroundColor= "#ffffff")
+    if(array.length === 3) array.map((e)=> document.getElementById(e).style.backgroundColor= "#ffffff")
 }
 
 export const playAudio = (id, volume)=>{
@@ -29,7 +28,6 @@ const Board = (props)=>{
         <Square 
           id={i} 
           key={i} 
-        //   number={i + 1} 
           value={props.board[i]} 
           click={props.handleClick}
         ></Square>
