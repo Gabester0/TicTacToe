@@ -10,7 +10,6 @@ const findGame = async (socket, io)=>{
       const gameStatus = { game: 1, status: false };
       await redisClient.setAsync(`1`, JSON.stringify(gameStatus)) //Set A Game status of false because only one player has joined
       socket.join(`1`)
-      // io.to(`1`).emit("join", {game: 1, player: `X`, status: false, note: `This is game #${1} and player X has joined the game.  Waiting for a second player`}) //Communicate to first client Game number and player (X)
       socket.emit("join", { ...gameStatus, player: `X`, note: `This is game #${1} and player X has joined the game.  Waiting for a second player`}) //Communicate to first client Game number and player (X)
       return gameStatus
    }else {    //Handle adding second player, or creating additional games
@@ -21,8 +20,6 @@ const findGame = async (socket, io)=>{
       const latestGame = games[games.length - 1]
       const latestGameStateJSON = await redisClient.getAsync(`${latestGame}`)
       const latestGameState = JSON.parse(latestGameStateJSON)
-      console.log(`findGame.js line 24: ${latestGameState}`)
-      // const latestGameStatus = latestGameState.status
 
       if(latestGameState.status === false){    //Add Player to existing Game
          socket.join(`${latestGame}`)
@@ -41,7 +38,6 @@ const findGame = async (socket, io)=>{
          const newGameState = { game: newGame, status: false};
          await redisClient.setAsync(`${newGame}`, JSON.stringify(newGameState)) //Set A Game status of false because only one player has joined
          socket.join(`${newGame}`)
-         // io.to(`${newGame}`).emit("join", {game: newGame, player: `X`, status: false, note: `This is game #${newGame} and player X has joined the game.  Waiting for a second player`}) //Communicate to first client Game number and player (X)
          socket.emit("join", { ...newGameState, player: `X`, note: `This is game #${newGame} and player X has joined the game.  Waiting for a second player`}) //Communicate to first client Game number and player (X)
          return newGameState
       }

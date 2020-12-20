@@ -29,8 +29,6 @@ io.on('connection', async (socket) => {
    }
 
    socket.on('click', async ({ game, client, click })=>{
-      // const allClients = io.sockets.adapter.rooms[game].sockets
-      // console.log("received a click", " All Clients: ", allClients)
       const firstGameState = await handleClick(game, client, click)
       currentMoves = client === `X` ? firstGameState.xMoves : firstGameState.oMoves
       const secondGameState = await checkWinner(firstGameState, currentMoves)
@@ -55,15 +53,9 @@ io.on('connection', async (socket) => {
    })
 
    socket.on(`quit`, async ({ game })=>{
-      //! RESUME UPDATES HERE
-      console.log(`SERVER.js line 59 `, game)
       const gameStateJSON = await redisClient.getAsync(`${game}`)
       const gameState = JSON.parse(gameStateJSON);
-      console.log(`SERVER.js line 61 `, gameState.winner, gameState.draw)
       if( !gameState.winner && !gameState.draw ) socket.to(game).emit(`quit`, game) 
-      // const winner = await redisClient.getAsync(`${game}.winner`)
-      // const draw = await redisClient.getAsync(`${game}.draw`)
-      // if(winner === 'false' && draw === 'false') socket.to(game).emit(`quit`, game)
    })
  });
 
