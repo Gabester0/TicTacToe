@@ -5,21 +5,20 @@ import ConfettiCannon from './components/confettiCannon/ConfettiCannon';
 import { StaticDiv, StyledH5One, StyledH5Two, Btn, Cannon, Sound } from './AppStyles';
 import { delayFunction } from './utility/utilities';
 
+const volumeSVG = require('./static/volume.svg');
+const muteSVG = require('./static/mute.svg');
+
 const RandomGame = (props)=>{
     const [ socket ] = useSocket(process.env.REACT_APP_SERVER_URL, {autoConnect: false});
-    const [ connected, setConnected ] = useState(false)
+
     const [ ready, setReady ] = useState(false);
-    const [ client, setClient ] = useState(false);
+    const [ client, setClient ] = useState();
     const [ game, setGame ] = useState();
     const [ board, setBoard ] = useState( { ...Array(9).fill(null) } );
     const [ player, setPlayer ] = useState(``)
-    const [ lastMove, setLastMove ] =  useState(null)
-    const [ xMoves, setXMoves ] = useState([]);
-    const [ oMoves, setOMoves ] = useState([]);
     const [ winner, setWinner ] = useState(false);
     const [ draw, setDraw ] = useState(false);
     const [ delay, setDelay ] = useState(false);
-    const [ match, setMatch ] = useState([]);
     const [ lastWin, setLastWin ] = useState([]);
     const [ quit, setQuit ] = useState(false);
 
@@ -32,23 +31,22 @@ const RandomGame = (props)=>{
         setGame(gameState.game)
         setBoard(gameState.board)
         setPlayer(gameState.player)
-        setLastMove(gameState.lastMove)
-        setXMoves(gameState.xMoves)
-        setOMoves(gameState.oMoves)
-        setWinner(gameState.winner)
         setDraw(gameState.draw)
-        setMatch(gameState.match)
+        setWinner(gameState.winner)
     }
 
     useEffect( ()=>{
         socket.connect();
+
         socket.on('connection', (socket)=>{
-            setConnected(true)
             console.log(`Socket Connected!`, socket.connected)
         })
+
         socket.on("join", ({note, game, player, status})=>{
-            if(!status && !client) setClient(player)
-            if(status && !client) setClient(player)
+            setClient(player)
+            sessionStorage.setItem('client', player)
+            console.log(`Updated client to ${player}`)
+            setGame(game)
             console.log("Client is Playing as:  ", player)
             console.log(`Server message: ${note}`, game, player, status)
         })
@@ -70,9 +68,11 @@ const RandomGame = (props)=>{
 
         socket.on(`gameOver`, (gameState)=>{
             updateGameState(gameState)
+            console.log(gameState)
             if(gameState.winner){
                 highlightWin(gameState.match, setLastWin, lastWin, gameState.player);
-                console.log(`Player: `, player, ` Latest player: `, gameState.player, ` Client: `, client)
+                //&& player === client
+                const client = sessionStorage.getItem('client')
                 if( gameState.player === client ){
                     delayFunction(1225, setDelay, true)
                     const sound = sessionStorage.getItem('sound')
@@ -83,21 +83,27 @@ const RandomGame = (props)=>{
             }
         })
 
-        socket.on(`quit`, ({game})=>{
+        socket.on(`quit`, ()=>{
             console.log(`The other player has quit`)
             setReady(false)
             setQuit(true)
+            sessionStorage.removeItem('client')
         })
 
-        window.addEventListener('beforeunload', ()=> socket.emit(`quit`, {game}) )
-        document.getElementById('menu').addEventListener('click', ()=> socket.emit(`quit`, {game}) )
+        //Ensures this only runs once when game value has been set
+        if(typeof game === `number`){
+            window.addEventListener('beforeunload', ()=> socket.emit(`quit`, {game}) )
+            document.getElementById('menu').addEventListener('click', ()=>{
+                sessionStorage.removeItem('client')
+                socket.emit(`quit`, {game})
+            })
+        }
 
         return ()=>{
             window.removeEventListener('beforeunload', ()=> socket.emit(`quit`, {game}) )
             document.getElementById('menu').removeEventListener('click', ()=> socket.emit(`quit`, {game}) )
         }
-
-    }, [game, setGame])
+    }, [game, client])
 
     const handleClick = (e) =>{
         if(client === player && !winner && !draw){
@@ -109,19 +115,18 @@ const RandomGame = (props)=>{
     }
 
     const handlePlayAgain = ()=>{
-        setReady(false)
-        setQuit(false)
         const resetGameState = {game: ``, board: { ...Array(9).fill(null) }, player: ``, lastMove: null, xMoves: [], oMoves: [], winner: false, draw: false, match: [] }
         updateGameState(resetGameState)
+        setReady(false)
+        setQuit(false)
         setDelay(false)
         setGame(``)
         if(lastWin.length >= 1) resetHighlight(lastWin[lastWin.length - 1])
         console.log(`Initiating another game`)
         socket.emit(`initiatePlayAgain`, { game, client })
+        setClient(false)
+        sessionStorage.removeItem('client')
     }
-
-    const volumeSVG = require('./static/volume.svg');
-    const muteSVG = require('./static/mute.svg');
 
     const toggleSound = ()=>{
         const sound = sessionStorage.getItem('sound');
@@ -150,7 +155,7 @@ const RandomGame = (props)=>{
                 src={require('./static/StubbyCannon.png')} 
                 alt="confetti canon"
                 ref={confettiAnchorRef} />
-            {winner && delay && (
+            {winner && player === client && delay && (
                 <ConfettiCannon 
                     anchorRef={confettiAnchorRef}
                     dotCount={50}

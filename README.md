@@ -29,10 +29,6 @@
 
 ## Remaining goals:
 
-### - Final Items:
-
-> - Change server to store game data as a single object that is stringified and change socket to emit this object
-
 ### - Pre-Deployment Items:
 
 ##### - Client

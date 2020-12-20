@@ -22,25 +22,23 @@ io.on('connection', async (socket) => {
    console.log(`Socket Connected`, socket.id)
 
    const { game, status } = await findGame(socket, io)
-   console.log(game, status)
+   console.log(`SERVER.js line 25`, game, status)
    if(status){
       const initialGame = await initiateBoard(game)
-      io.to(game).emit(`start`, { game, ...initialGame } )
+      io.to(game).emit(`start`, initialGame)
    }
 
    socket.on('click', async ({ game, client, click })=>{
-      const allClients = io.sockets.adapter.rooms[game].sockets
-      console.log("received a click", " All Clients: ", allClients)
-      const { board, xMoves, oMoves, lastMove } = await handleClick(game, client, click)
-      currentMoves = client === `X` ? xMoves : oMoves
-      const { winner, match, draw } = await checkWinner(game, currentMoves, xMoves, oMoves)
-      if(winner) console.log(`The winner is ${client}!  With the winning moves:`, match)
+      const firstGameState = await handleClick(game, client, click)
+      currentMoves = client === `X` ? firstGameState.xMoves : firstGameState.oMoves
+      const secondGameState = await checkWinner(firstGameState, currentMoves)
+      if(secondGameState.winner) console.log(`The winner is ${client}!  With the winning moves:`, secondGameState.match)
 
-      if(winner || draw){
-         io.to(game).emit(`gameOver`, { game, board, player: client, winner, draw, lastMove, xMoves, oMoves, match })
+      if(secondGameState.winner || secondGameState.draw){
+         io.to(game).emit(`gameOver`, secondGameState)
       } else {
-         const newPlayer = await changeTurn(client, game)
-         io.to(game).emit(`clicked`, { game, board, player: newPlayer, winner, draw, lastMove, xMoves, oMoves, match })
+         const finalGameState = await changeTurn(client, secondGameState)
+         io.to(game).emit(`clicked`, finalGameState)
       }
    })
 
@@ -50,16 +48,15 @@ io.on('connection', async (socket) => {
       console.log(game, status)
       if(status){
          const initialGame = await initiateBoard(game)
-         io.to(game).emit(`start`, { game, ...initialGame } )
+         io.to(game).emit(`start`, initialGame)
       }
    })
 
-   socket.on(`quit`,async ({ game })=>{
-      const winner = await redisClient.getAsync(`${game}.winner`)
-      const draw = await redisClient.getAsync(`${game}.draw`)
-      if(winner === 'false' && draw === 'false') socket.to(game).emit(`quit`, game)
+   socket.on(`quit`, async ({ game })=>{
+      const gameStateJSON = await redisClient.getAsync(`${game}`)
+      const gameState = JSON.parse(gameStateJSON);
+      if( !gameState.winner && !gameState.draw ) socket.to(game).emit(`quit`, game) 
    })
-   
  });
 
 
